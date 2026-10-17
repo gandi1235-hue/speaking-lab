@@ -287,7 +287,7 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
 <body>
 <div class="wrap">
   <header class="top">
-    <span class="eyebrow">College English 1 · Speaking Lab Midterm · v4</span>
+    <span class="eyebrow">College English 1 · Speaking Lab Midterm · v5</span>
     <h1>Speaking Lab Voice Simulator</h1>
     <p class="muted">주제 카드를 뽑고 1분 준비한 뒤, 영어로 말하면 AI 파트너 Alex가 듣고 소리로 답해요. 4분이 끝나면 실제 루브릭 4개 항목으로 채점하고 피드백을 드려요.</p>
   </header>
@@ -402,6 +402,33 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
       <p class="muted small" id="srSupport"></p>
       <div class="row"><span class="spacer"></span><button class="btn ghost small" id="changeKeyBtn" type="button">API 키 바꾸기</button></div>
     </div>
+    <details class="ref" id="tipsBox">
+      <summary>점수 올리는 꿀팁 (시험 전 1분 읽기)</summary>
+      <div class="refbody" style="grid-template-columns:1fr">
+        <div class="refcat"><h4>1. 4분 뼈대를 외워 가세요 <span>(Expressions + Interaction)</span></h4>
+          <ul>
+            <li><b>시작</b> "Shall we start? Let's begin with the advantages." (토론 시작하기)</li>
+            <li><b>내 의견 + 이유 + 예시</b> "In my opinion… because… For example, when I was in high school…"</li>
+            <li><b>넘기기</b> "What about you? How do you see it?" (상대 의견 묻기)</li>
+            <li><b>반응</b> "I see your point, but…" / "That's exactly what I think." (동의·반대)</li>
+            <li><b>캐묻기</b> "Could you give me an example?" (구체적으로 묻기)</li>
+            <li><b>마무리</b> "So, to sum up, we both think…"</li>
+          </ul></div>
+        <div class="refcat"><h4>2. 한 턴 = 의견 1 + 이유 1 + 예시 1 <span>(Content)</span></h4>
+          <ul><li>길게 끌지 말고 20~30초 안에 끝내고 질문으로 넘기세요. 그래야 질문 수·턴테이킹 점수가 같이 올라요.</li>
+          <li>예시는 구체적으로: "my friend", "last semester", "in Daechi-dong" 같은 디테일 하나.</li></ul></div>
+        <div class="refcat"><h4>3. 말이 막히면 채우는 말 <span>(Comprehensibility)</span></h4>
+          <ul><li>"oh oh oh", "the the the" 대신 → "Well, let me think…", "That's a good question."</li>
+          <li>문장을 끝까지 말하고 쉬세요. 문장 중간 멈춤이 감점이에요.</li></ul></div>
+        <div class="refcat"><h4>4. 자주 틀리는 표현 <span>(이번 연습에서 나온 것)</span></h4>
+          <ul><li>"for my opinion" → <b>In my opinion</b> / "academy" → <b>hagwon (private academy)</b></li>
+          <li>"two advantage" → <b>two advantages</b> / "it can be motivation" → <b>it motivates me</b></li>
+          <li>"study by myself" ✓ / "nobody teaches me" ✓ / "it's systematic" ✓</li></ul></div>
+        <div class="refcat"><h4>5. 파트너 활용 <span>(Interaction)</span></h4>
+          <ul><li>상대가 말하면 한 문장이라도 반응 후 내 말: "Right, and…", "I agree up to a point, but…"</li>
+          <li>한 번은 꼭 끼어들기: "Sorry to interrupt, but…" / 한 번은 주제 복귀: "Anyway, getting back to…"</li></ul></div>
+      </div>
+    </details>
     <div class="panel" id="historyPanel" hidden>
       <h3>지난 연습 기록</h3>
       <div class="history" id="history"></div>
@@ -1012,6 +1039,26 @@ function setMic(mode) {
 }
 // One "turn" of listening may span several recognizer sessions (phones stop the recognizer after a pause).
 // `committed` keeps what earlier sessions heard; the turn ends only on tap, or on silence when that mode is chosen.
+// Android Chrome reports each interim result as the whole utterance so far ("I", "I think", "I think going…") instead of
+// replacing the previous one, so naive concatenation repeats every word. Merge segments: a segment that extends the text
+// so far replaces it; a genuinely new segment is appended.
+function norm(t) { return t.toLowerCase().replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ").trim(); }
+function mergeSegments(segs) {
+  let out = "";
+  for (const raw of segs) {
+    const t = (raw || "").trim(); if (!t) continue;
+    if (!out) { out = t; continue; }
+    const a = norm(out), b = norm(t);
+    if (b.startsWith(a) || a === b) { out = t; continue; }                 // cumulative: newer one contains the older
+    if (a.startsWith(b)) continue;                                           // stale shorter copy
+    // overlap: the new segment starts with the tail of what we have (Android sometimes re-sends the last few words)
+    const aw = a.split(" "), bw = b.split(" ");
+    let k = Math.min(aw.length, bw.length, 8), cut = 0;
+    for (; k >= 2; k--) if (aw.slice(-k).join(" ") === bw.slice(0, k).join(" ")) { cut = k; break; }
+    out = cut ? out + " " + t.split(/\s+/).slice(cut).join(" ") : out + " " + t;
+  }
+  return out;
+}
 function newTurnMetrics() { return { start: 0, last: 0, confs: [], pauses: 0, longest: 0, restarts: 0 }; }
 function listen(resume) {
   if (state?.engine === "openai") { if (!resume) startRecording(); return true; }
@@ -1030,14 +1077,15 @@ function listen(resume) {
       if (!turnM.start) turnM.start = now;
       if (turnM.last) { const gap = now - turnM.last; if (gap > 1500) { turnM.pauses++; turnM.longest = Math.max(turnM.longest, gap); } }
       turnM.last = now;
-      let fin = "", tmp = "";
+      const finals = [], interims = [];
       for (let i = 0; i < e.results.length; i++) {
         const r = e.results[i];
-        if (r.isFinal) { fin += r[0].transcript + " "; if (i >= e.resultIndex && typeof r[0].confidence === "number" && r[0].confidence > 0) turnM.confs.push(r[0].confidence); }
-        else tmp += r[0].transcript;
+        if (r.isFinal) { finals.push(r[0].transcript); if (i >= e.resultIndex && typeof r[0].confidence === "number" && r[0].confidence > 0) turnM.confs.push(r[0].confidence); }
+        else interims.push(r[0].transcript);
       }
-      sessionFinal = fin;
-      heard = (committed + " " + fin + tmp).replace(/\s+/g, " ").trim();
+      const fin = mergeSegments(finals), tmp = mergeSegments(interims);
+      sessionFinal = fin ? fin + " " : "";
+      heard = (committed + " " + fin + " " + tmp).replace(/\s+/g, " ").trim();
       $("interim").textContent = heard;
       armSilence();
     };
