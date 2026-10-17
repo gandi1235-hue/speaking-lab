@@ -197,6 +197,11 @@ details.ref[open] > summary::after { content: "−"; }
 .chip.hit { background: var(--good-soft); border-color: transparent; color: var(--good); font-weight: 700; }
 .chip.hit::before { content: "✓ "; }
 .chip.miss { background: var(--warn-soft); border-color: transparent; color: var(--warn); }
+button.chip { cursor: pointer; }
+.chip.open { outline: 2px solid var(--accent); outline-offset: 1px; }
+.hintcard { border: 1px solid var(--accent); background: var(--accent-soft); border-radius: var(--r-sm); padding: 12px 14px; font-size: 14px; display: flex; flex-direction: column; gap: 6px; }
+.hintcard ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.hintcard li { font-weight: 600; color: var(--accent); }
 
 /* results */
 .total { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; padding: 18px 20px; border-radius: var(--r-sm); background: linear-gradient(135deg, var(--accent-soft), transparent); }
@@ -287,7 +292,7 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
 <body>
 <div class="wrap">
   <header class="top">
-    <span class="eyebrow">College English 1 · Speaking Lab Midterm · v5</span>
+    <span class="eyebrow">College English 1 · Speaking Lab Midterm · v6</span>
     <h1>Speaking Lab Voice Simulator</h1>
     <p class="muted">주제 카드를 뽑고 1분 준비한 뒤, 영어로 말하면 AI 파트너 Alex가 듣고 소리로 답해요. 4분이 끝나면 실제 루브릭 4개 항목으로 채점하고 피드백을 드려요.</p>
   </header>
@@ -348,7 +353,8 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
         <div class="field">
           <label for="optStyle">파트너 스타일</label>
           <select id="optStyle">
-            <option value="balanced">보통 (동의·반대 섞기)</option>
+            <option value="balanced" selected>보통 (짧게 말하고 반박할 틈을 줌)</option>
+            <option value="gentle">쉬움 (더 짧게, 내 말을 받아주며 유도)</option>
             <option value="challenging">까다로움 (자주 반박·끼어들기)</option>
             <option value="quiet">소극적 (내가 이끌어야 함)</option>
           </select>
@@ -380,8 +386,8 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
         <div class="field">
           <label for="optEngine">음성 인식 엔진</label>
           <select id="optEngine">
-            <option value="phone" selected>폰 내장 (구글/애플)</option>
-            <option value="openai">OpenAI 음성 인식 (OpenAI 키 필요 · 더 정확)</option>
+            <option value="openai">OpenAI 음성 인식 (추천 · OpenAI 키 필요)</option>
+            <option value="phone">폰 내장 (구글/애플 · 부정확)</option>
           </select>
         </div>
         <div class="field">
@@ -499,7 +505,9 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
       </div>
     </div>
     <div class="panel">
+      <p class="muted small" style="margin:0">표현 카테고리를 탭하면 바로 쓸 수 있는 문장이 보여요.</p>
       <div class="chips" id="liveChips"></div>
+      <div class="hintcard" id="chipHint" hidden></div>
       <details class="ref">
         <summary>표현 모음 보기</summary>
         <div class="refbody" id="refDisc"></div>
@@ -702,11 +710,21 @@ async function saveKey() {
   if (!/^sk-ant-/.test(k)) { $("keyStatus").innerHTML = `<span class="err">sk-ant- 로 시작하는 키를 넣어주세요.</span>`; return; }
   store.set("sl_key", k);
   store.set("sl_ws", $("wsId").value.trim());
-  store.set("sl_oa", $("oaKey").value.trim());
+  const oa = $("oaKey").value.trim();
+  store.set("sl_oa", oa);
+  if (oa) store.set("sl_optEngine", "openai"); else if (store.get("sl_optEngine") === "openai") store.set("sl_optEngine", "phone");
+  $("optEngine").value = oa ? "openai" : "phone";
   $("keyStatus").textContent = "연결 확인 중…"; $("saveKeyBtn").disabled = true;
   try {
     await callClaude({ model: "claude-haiku-5-5", messages: [{ role: "user", content: "Say OK." }], maxTokens: 16, effort: "low" });
-    $("keyStatus").innerHTML = `<span class="ok">연결됐어요!</span>`;
+    let oaMsg = "";
+    if (oa) {
+      try {
+        const r = await fetch("https://api.openai.com/v1/models/gpt-4o-mini-transcribe", { headers: { Authorization: "Bearer " + oa } });
+        oaMsg = r.ok ? " OpenAI 키도 확인됐어요. 음성 인식이 OpenAI로 설정됐어요." : ` OpenAI 키 확인 실패 (HTTP ${r.status}). 키를 다시 확인하세요.`;
+      } catch { oaMsg = " OpenAI 키는 지금 확인하지 못했어요 (네트워크)."; }
+    }
+    $("keyStatus").innerHTML = `<span class="ok">연결됐어요!</span>${esc(oaMsg)}`;
     setTimeout(() => { show("s-pick"); renderTopics(); }, 600);
   } catch (e) {
     $("keyStatus").innerHTML = `<span class="err">${esc(apiErrorKo(e))}</span>`;
@@ -747,11 +765,13 @@ function show(id) {
 
 // ---------- prep ----------
 let tick = null;
+function addNoteOnce(msg) { const el = $("srSupport"); if (el && !el.dataset.note) { el.dataset.note = "1"; el.innerHTML = `<span class="err">${esc(msg)}</span>`; } }
 function startPrep(i) {
   clearInterval(tick);
   const t = TOPICS[i];
   state = { topic: i, turns: [], notes: "", duration: +$("optTime").value, starter: $("optStarter").value, style: $("optStyle").value,
     rate: +$("optRate").value, model: $("optModel").value, auto: $("optMode").value === "auto", endMode: $("optEnd").value, fix: $("optFix").value === "on", engine: $("optEngine").value === "openai" && oaKey() ? "openai" : "phone", startedAt: 0, elapsed: 0, ended: false, busy: false };
+  if ($("optEngine").value === "openai" && !oaKey()) addNoteOnce("OpenAI 키가 없어서 폰 내장 인식을 써요. 설정에서 'API 키 바꾸기' → OpenAI 키를 넣으면 더 정확해져요.");
   $("prepNum").textContent = i + 1; $("prepQ").textContent = t.q;
   $("notes").value = "";
   $("hintBox").open = false;
@@ -836,9 +856,20 @@ function usedCats() {
   for (const t of state.turns) if (t.role === "user") for (const c of CATS) { const m = t.content.match(c.re); if (m) (hits[c.key] ||= []).push(m[0]); }
   return hits;
 }
+let chipOpen = null;
+function showChipHint(key) {
+  const c = CATS.find((x) => x.key === key);
+  const box = $("chipHint");
+  if (!c || chipOpen === key) { chipOpen = null; box.hidden = true; renderChips(); return; }
+  chipOpen = key;
+  box.hidden = false;
+  box.innerHTML = `<div class="row" style="justify-content:space-between"><b>${esc(c.en)}</b><span class="muted small">${esc(c.ko)} · 교재 ${esc(c.page || "")}</span></div><ul>${c.ex.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>`;
+  renderChips();
+}
+document.addEventListener("click", (e) => { const b = e.target.closest("#liveChips .chip"); if (b) showChipHint(b.dataset.key); });
 function renderChips() {
   const hits = state ? usedCats() : {};
-  $("liveChips").innerHTML = CATS.map((c) => `<span class="chip ${hits[c.key] ? "hit" : ""}" title="${esc(c.en)}">${c.ko}</span>`).join("");
+  $("liveChips").innerHTML = CATS.map((c) => `<button type="button" class="chip ${hits[c.key] ? "hit" : ""} ${chipOpen === c.key ? "open" : ""}" data-key="${c.key}" title="${esc(c.en)}">${c.ko}</button>`).join("");
   $("hitCount").textContent = `표현 ${Object.keys(hits).length} / ${CATS.length}`;
 }
 
@@ -881,7 +912,8 @@ $("endBtn").addEventListener("click", () => finish("manual"));
 function partnerSystem() {
   const t = TOPICS[state.topic];
   const style = {
-    balanced: "Mix agreeing and disagreeing naturally. Sometimes ask the student for an example or detail, sometimes invite them to share their view.",
+    balanced: "Mix agreeing and disagreeing naturally, but keep each turn SHORT (1-2 sentences, 15-30 words) and make exactly ONE clear, slightly debatable claim per turn so the student has something to push back on. Do not pile up several arguments or examples in one turn. Leave obvious openings: end with 'but maybe I'm wrong, what do you think?' or 'Would you disagree?' or 'Do you have a counterexample?'. When the student makes a point, respond to that point only.",
+    gentle: "Be an easy, supportive partner: 1-2 short sentences (10-25 words). Make one simple claim at a time, then hand the floor back with a direct question. Never list multiple arguments. If the student struggles or says little, ask a simpler, more concrete question ('What about in your high school?').",
     challenging: "Be a lively, slightly challenging partner: dispute the student's points fairly often ('That may be true, but...'), occasionally jump in with 'Sorry to interrupt, but...', and push them to give reasons and examples.",
     quiet: "Be a fairly passive partner: give short answers (1-2 sentences), rarely ask questions, and let the student lead the discussion. Only add a new point when the student invites you.",
   }[state.style];
@@ -890,7 +922,7 @@ function partnerSystem() {
 The student's words reach you through speech recognition, so they may contain transcription errors, missing punctuation, or odd words; interpret them charitably as spoken English. Your reply will be read aloud by a text-to-speech voice.
 
 How to behave:
-- Speak like a real B2-level university student in a spoken discussion: natural, friendly, contractions, 2-3 short sentences (about 20-45 words). Plain spoken sentences only: no lists, headings, emojis, asterisks, quotation marks, or stage directions.
+- Speak like a real B2-level university student in a spoken discussion: natural, friendly, contractions, short turns. Remember the STUDENT is being graded, not you: your job is to give them chances to use expressions (agreeing, disagreeing, disputing, interrupting, asking for details), so leave room and never dominate. Plain spoken sentences only: no lists, headings, emojis, asterisks, quotation marks, or stage directions.
 - Model the functional phrases from the course naturally (starting a discussion, inviting others to speak, expressing opinions, agreeing/disagreeing, clarification, interrupting, staying on track, asking for details, supporting or disputing a point), but don't cram them.
 - Respond directly to what the student just said before adding your own point. Bring fresh, concrete Korean-university-life examples (hagwons, SNU, dorms, KakaoTalk, commuting from Gyeonggi-do, etc.).
 - End most turns by handing the floor back (a question or an invitation), so the student keeps talking.
