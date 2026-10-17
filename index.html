@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Speaking Lab">
+<meta name="theme-color" content="#1F4FD8">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Speaking%20Lab%20Voice%20Simulator%22%2C%22short_name%22%3A%22Speaking%20Lab%22%2C%22start_url%22%3A%22./index.html%22%2C%22scope%22%3A%22./%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23F3F5F7%22%2C%22theme_color%22%3A%22%231F4FD8%22%2C%22lang%22%3A%22ko%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage/png%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEI0lEQVR4nO3dS3ITSRRAUbmDfcCM5cBSWQ7M2Ak9gcDtaFmf%2BmXWPWdsQq%2BIdyslWbZfPn75/usCUf8cPQAcSQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYC0D0cPUPPz2%2BebX/Pp648dJuFyuVxe/JG8bd2z8LcIYjsC2Mgai/%2BWENYngJVtsfhvCWE9XgSvaI/l3/NxCpwAKzhyIZ0GyzgBFjr6bnz0489OAAuMsnyjzDEjATxptKUbbZ5ZCOAJoy7bqHONTACkCeBBo99lR59vNAJ4wCzLNcucIxAAaQK402x31dnmPYoASBPAHWa9m846954EQJoASBMAaQK4Yfbn0bPPvzUBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNADd8%2Bvrj6BEWmX3%2BrX04eoCtPPr3cYuL4v/ICUCcAEgTwB1mPfpnnXtPAiBNAHea7W4627xHEcBvj74jMrva9V5z2gC2uAPOclctX/ujThvAVkZfhNHnG40ASBPAK/c%2BLx71LnvvXJ7//yWAJ40WwWjzzOLUAWy9FKMsXeU6t3DqAJ4x2wfEHn18T3/%2B67SfBt3TnyXcc7mODu8sTn8CPLMozy7yXkv57OM8c11nD80JsLItT4OzL%2BMRXj5%2B%2Bf7r6CH2cNTdb40QjpqjEJwT4B0/v31evARv//09i7j24nnhe13mBLhcxn9uv4XiNT/i9C%2BC4T2pAPZ892QE7v63pQJYYrYIZpv3KLkAltzdZlmqJXOW7v6XS%2BxF8GtLl3nERTnjNW0tdwKsZbTTYLR5ZpENYJRvcq1hlG%2B2zSj7FOiPtZb4iAWaefZR5AO4XNa9k%2B%2BxTLPNOzIB/Db6h9dGn29WAnhl6%2Bf0jyzcSLOcmQDeGOWF7ZYs/1/Zd4GuOftynP36HiWA/3HWJTnrdS0hgCvOtixnu561eA1wh5lfF1j89zkB7jDrEs06956cAA%2Ba4TSw%2BPcTwJNGDMHiP04AC40QgsV/ngBWckQIFn85AWxgyxgs/boEsBO/mGpM3gbdiWUekwBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBI8yORN4zwWx%2BW8tNo1zkBSBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgzWeBSHMCkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiDtX4r5F9/HMwZsAAAAAElFTkSuQmCC%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image/png%22%7D%2C%7B%22src%22%3A%22data%3Aimage/png%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAANfElEQVR4nO3dS5YTOxZAUVOLeUCP4cBQGQ70mAnVAB6Q5MdOx0fS2btfq2wpHPeE7OS9effxy/cLAJDyv7NfAABwPAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIOjt2S8A2Ne3zx9e/b99/%2Bnrhq8EGMmbdx%2B/fD/7RQD3u2fQ30oYwPwEAEzqyIH/EkEA8xEAMJGRhv5TxADMQQDA4GYY%2Bk8RAzAuAQCDmnnwPyQEYDwCAAay0tB/ihiAMQgAGEBh8D8kBOBc/iEgOFlx%2BF8u3fcNo3ACACcxAH9zGgDHEwBwMIP/aUIAjuMrADiQ4f886wPHEQBwEMPtOtYJjuErANiZgfZ6vhKA/TgBgB0Z/vexfrAfAQA7Mby2YR1hHwIAdmBobct6wvYEAGzMsNqHdYVt%2BREgbMSAOo4fB8L9nADABgz/Y1lvuJ8AAIAgAQB38jR6DusO9xEAcAdD6FzWH15PAMArGT5jsA/wOgIAXsHQGYv9gNsJALiRYTMm%2BwK3EQAAECQA4AaeMsdmf%2BB6AgCuZLjMwT7BdQQAXMFQmYv9gpcJAAAIEgDwAk%2BTc7Jv8DwBAABBAgCe4SlybvYPniYA4AmGxxrsIzxOAABAkACAR3hqXIv9hH8JAAAIEgAAECQA4AHHxWuyr/A3AQAAQQIA/uApcW32F34TAAAQJAAAIEgAwE%2BOhxvsM/wgAAAgSAAAQJAAgItj4Rr7DQIAAJIEAAAECQAACBIA5Pk%2BuMm%2BUycAACBIAABAkAAAgCABAABBAgAAggQAaX4J3mb/KRMAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAGnvP309%2ByVwIvtPmQAAgCABAABBAgAAggQAAAQJAAAIEgDk%2BSV4k32nTgAAQNDbs18Ac/v2%2BcOp//%2Be4jibzwCzcgIAAEECAC6eomrsNwgAAEgSAAAQJADgJ8fCDfYZfhAAABAkAAAgSADAHxwPr83%2Bwm8CgKmd/Y%2Bw0Ob6Y2YCAB7wlLgm%2Bwp/EwDcxU0VzuPzxz0EAAAECQB4hCertdhP%2BJcAAIAgAQBP8NS4BvsIjxMATG/PP8UyPOa25/75E0BmJwAAIEgAwAucAszJvsHzBAB3c6OF4/nccS8BwBL2/j7WzXYue%2B%2BX7/9ZgQCAK4mAOdgnuI4AgBsYLmOzP3A9AQAAQQKATYzw5HXU97IjvFf%2BddS%2BjPD9v2uQLQgAeAU34LHYD7idAIBXMnTGYB/gdQQASzn6eNbwOdfR6z/C8T9sRQCwmeowrL7vs1XXvfq%2B2Z4AAIAgAcByzjim9VR2rDPW2/E/q3l79guAVfwaSgbFfoQWbMcJAJsa5QZ95hAeZQ1Wc%2Ba6jhJ1ri22JABgB27U27KesD0BADsxtLZhHWEfAoDNjXLDHuHYdpS1mNUI6zfCdXS5jLEWrMWPAGFnfhx4O8MO9ucEgKWNNHQNteuMtE4jXT%2BwNQHALka6iY/EujzP%2BjzOurAHAcDyRnuKe//pqxv6AyOuyWjXDWxNAJAw4s18xKF3tFHXYMTrBbYmANjNiDf2EVXXqfq%2Bb2Wd2IsAIGPkp7pRn4T3MPp7Hfk6gS35M0B29f7TVzfUG/w5GFdat5EH/sisG3tyAkDKTEN19Cfla8z2Hma6PuBeTgDI%2Bfb5w1RDabZTgZnW9k8zrC1sSQCwO18DbGfUGJh16I/MmrI3AUDSbKcAj3n4%2Bo8MgtnX7qGRYgqO8ubdxy/fz34RNIx4k11tkD3mnnW3PucorDvncwJA2gonAS9Z/f3dY8ThD0fxVwAcxiCCl/mccBQBQJ6nwCb7Tp0A4FCjPt0YBi2j7veonw/WJADgp1GHAtuyz/CDAOBwIz/lGA5rG3l/R/5csCYBAA%2BMPCR4PfsKfxMAnMLTDvzm88AZBACnGfmm52lxLSPv58ifA9YmAOAJIw8Nrmcf4XH%2BKWBON8MN2lPafFxX8DwnAHCFGYYJv9kveJkA4HSzPAUZKnOYZZ9mue5ZlwBgCLPcDGcZLlWz7M8s1ztrEwBwo1mGTI19gdv4ESBDme0m7knufK4ZeB0nAAxltpvjbMNnNbOt/2zXN2sTAAxntpvkbENoFbOt%2B2zXNet7e/YLgBX8GkZu8vubbfDDqJwAMKRZB6nhtK9Z13fW65m1%2BREgQ5v1hn%2B5uOlvyXUA2xMADG/mm//lYgDcw97DfnwFADubfYidxbrBvpwAMIVVhoEnwpfZaziGAGAaqwyGy8VweIz9hWMJAKay0pD4pTws7CecRwAwnRWHxuXSGhz2EM4nAJjSqgPklxUHiT2DsQgAprX6QPll5sFij2BcAoCpVQbMn0YeNvYD5iEAmF5x6PzpzAFk7Q1/5iUAWEJ9ED1liwFlbR9n%2BDM7AcAyDCqOYvizAv8UMMtwU%2BYIrjNWIQBYipsze3J9sRIBwHLcpNmD64rVCACW5GbNllxPrEgAsCw3bbbgOmJVAoCluXlzD9cPK/NngGT4M0GuZfBT4ASADDd1ruE6oUIAkOLmznNcH5T4CoAsXwnwi8FPkRMAstz0uVxcB3QJANLc/NvsP2W%2BAoCffCXQYfCDEwD4j6HQYJ/hBycA8AinAesx%2BOFvAgCeIQTmZ/DD43wFAM8wPOZm/%2BBpTgDgSk4D5mHww8sEANxICIzL4IfrCQB4JSEwDoMfbicA4E5C4DwGP7yeAICNCIHjGPxwPwEAOxAD2zP0YVsCAHYkBO5n8MM%2BBAAcRAxcz9CH/QkAOIEY%2BJehD8cSAHCycgwY%2BnAeAQCDWTkIDHwYhwCAwc0cBAY%2BjEsAwIRGjALDHuYiAGByZ8eAwQ9z8p8DBoAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQNCbdx%2B/fD/7RcBZvn3%2BcPZL4GTvP309%2ByXAKZwAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQ9Obdxy/fz34RAMCxnAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACPo/VRHFFGDxtKsAAAAASUVORK5CYII%3D%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%7D%2C%7B%22src%22%3A%22data%3Aimage/png%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAANfElEQVR4nO3dS5YTOxZAUVOLeUCP4cBQGQ70mAnVAB6Q5MdOx0fS2btfq2wpHPeE7OS9effxy/cLAJDyv7NfAABwPAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIOjt2S8A2Ne3zx9e/b99/%2Bnrhq8EGMmbdx%2B/fD/7RQD3u2fQ30oYwPwEAEzqyIH/EkEA8xEAMJGRhv5TxADMQQDA4GYY%2Bk8RAzAuAQCDmnnwPyQEYDwCAAay0tB/ihiAMQgAGEBh8D8kBOBc/iEgOFlx%2BF8u3fcNo3ACACcxAH9zGgDHEwBwMIP/aUIAjuMrADiQ4f886wPHEQBwEMPtOtYJjuErANiZgfZ6vhKA/TgBgB0Z/vexfrAfAQA7Mby2YR1hHwIAdmBobct6wvYEAGzMsNqHdYVt%2BREgbMSAOo4fB8L9nADABgz/Y1lvuJ8AAIAgAQB38jR6DusO9xEAcAdD6FzWH15PAMArGT5jsA/wOgIAXsHQGYv9gNsJALiRYTMm%2BwK3EQAAECQA4AaeMsdmf%2BB6AgCuZLjMwT7BdQQAXMFQmYv9gpcJAAAIEgDwAk%2BTc7Jv8DwBAABBAgCe4SlybvYPniYA4AmGxxrsIzxOAABAkACAR3hqXIv9hH8JAAAIEgAAECQA4AHHxWuyr/A3AQAAQQIA/uApcW32F34TAAAQJAAAIEgAwE%2BOhxvsM/wgAAAgSAAAQJAAgItj4Rr7DQIAAJIEAAAECQAACBIA5Pk%2BuMm%2BUycAACBIAABAkAAAgCABAABBAgAAggQAaX4J3mb/KRMAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAGnvP309%2ByVwIvtPmQAAgCABAABBAgAAggQAAAQJAAAIEgDk%2BSV4k32nTgAAQNDbs18Ac/v2%2BcOp//%2Be4jibzwCzcgIAAEECAC6eomrsNwgAAEgSAAAQJADgJ8fCDfYZfhAAABAkAAAgSADAHxwPr83%2Bwm8CgKmd/Y%2Bw0Ob6Y2YCAB7wlLgm%2Bwp/EwDcxU0VzuPzxz0EAAAECQB4hCertdhP%2BJcAAIAgAQBP8NS4BvsIjxMATG/PP8UyPOa25/75E0BmJwAAIEgAwAucAszJvsHzBAB3c6OF4/nccS8BwBL2/j7WzXYue%2B%2BX7/9ZgQCAK4mAOdgnuI4AgBsYLmOzP3A9AQAAQQKATYzw5HXU97IjvFf%2BddS%2BjPD9v2uQLQgAeAU34LHYD7idAIBXMnTGYB/gdQQASzn6eNbwOdfR6z/C8T9sRQCwmeowrL7vs1XXvfq%2B2Z4AAIAgAcByzjim9VR2rDPW2/E/q3l79guAVfwaSgbFfoQWbMcJAJsa5QZ95hAeZQ1Wc%2Ba6jhJ1ri22JABgB27U27KesD0BADsxtLZhHWEfAoDNjXLDHuHYdpS1mNUI6zfCdXS5jLEWrMWPAGFnfhx4O8MO9ucEgKWNNHQNteuMtE4jXT%2BwNQHALka6iY/EujzP%2BjzOurAHAcDyRnuKe//pqxv6AyOuyWjXDWxNAJAw4s18xKF3tFHXYMTrBbYmANjNiDf2EVXXqfq%2Bb2Wd2IsAIGPkp7pRn4T3MPp7Hfk6gS35M0B29f7TVzfUG/w5GFdat5EH/sisG3tyAkDKTEN19Cfla8z2Hma6PuBeTgDI%2Bfb5w1RDabZTgZnW9k8zrC1sSQCwO18DbGfUGJh16I/MmrI3AUDSbKcAj3n4%2Bo8MgtnX7qGRYgqO8ubdxy/fz34RNIx4k11tkD3mnnW3PucorDvncwJA2gonAS9Z/f3dY8ThD0fxVwAcxiCCl/mccBQBQJ6nwCb7Tp0A4FCjPt0YBi2j7veonw/WJADgp1GHAtuyz/CDAOBwIz/lGA5rG3l/R/5csCYBAA%2BMPCR4PfsKfxMAnMLTDvzm88AZBACnGfmm52lxLSPv58ifA9YmAOAJIw8Nrmcf4XH%2BKWBON8MN2lPafFxX8DwnAHCFGYYJv9kveJkA4HSzPAUZKnOYZZ9mue5ZlwBgCLPcDGcZLlWz7M8s1ztrEwBwo1mGTI19gdv4ESBDme0m7knufK4ZeB0nAAxltpvjbMNnNbOt/2zXN2sTAAxntpvkbENoFbOt%2B2zXNet7e/YLgBX8GkZu8vubbfDDqJwAMKRZB6nhtK9Z13fW65m1%2BREgQ5v1hn%2B5uOlvyXUA2xMADG/mm//lYgDcw97DfnwFADubfYidxbrBvpwAMIVVhoEnwpfZaziGAGAaqwyGy8VweIz9hWMJAKay0pD4pTws7CecRwAwnRWHxuXSGhz2EM4nAJjSqgPklxUHiT2DsQgAprX6QPll5sFij2BcAoCpVQbMn0YeNvYD5iEAmF5x6PzpzAFk7Q1/5iUAWEJ9ED1liwFlbR9n%2BDM7AcAyDCqOYvizAv8UMMtwU%2BYIrjNWIQBYipsze3J9sRIBwHLcpNmD64rVCACW5GbNllxPrEgAsCw3bbbgOmJVAoCluXlzD9cPK/NngGT4M0GuZfBT4ASADDd1ruE6oUIAkOLmznNcH5T4CoAsXwnwi8FPkRMAstz0uVxcB3QJANLc/NvsP2W%2BAoCffCXQYfCDEwD4j6HQYJ/hBycA8AinAesx%2BOFvAgCeIQTmZ/DD43wFAM8wPOZm/%2BBpTgDgSk4D5mHww8sEANxICIzL4IfrCQB4JSEwDoMfbicA4E5C4DwGP7yeAICNCIHjGPxwPwEAOxAD2zP0YVsCAHYkBO5n8MM%2BBAAcRAxcz9CH/QkAOIEY%2BJehD8cSAHCycgwY%2BnAeAQCDWTkIDHwYhwCAwc0cBAY%2BjEsAwIRGjALDHuYiAGByZ8eAwQ9z8p8DBoAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQNCbdx%2B/fD/7RcBZvn3%2BcPZL4GTvP309%2ByXAKZwAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQJAAAIEgAAECQAACAIAEAAEECAACCBAAABAkAAAgSAAAQ9Obdxy/fz34RAMCxnAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACBIAABAkAAAgSAAAQJAAAIAgAQAAQQIAAIIEAAAECQAACPo/VRHFFGDxtKsAAAAASUVORK5CYII%3D%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/png%22%2C%22purpose%22%3A%22maskable%22%7D%5D%7D">
+<title>Speaking Lab Voice Simulator</title>
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEI0lEQVR4nO3dS3ITSRRAUbmDfcCM5cBSWQ7M2Ak9gcDtaFmf+mXWPWdsQq+IdyslWbZfPn75/usCUf8cPQAcSQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYC0D0cPUPPz2+ebX/Pp648dJuFyuVxe/JG8bd2z8LcIYjsC2Mgai/+WENYngJVtsfhvCWE9XgSvaI/l3/NxCpwAKzhyIZ0GyzgBFjr6bnz0489OAAuMsnyjzDEjATxptKUbbZ5ZCOAJoy7bqHONTACkCeBBo99lR59vNAJ4wCzLNcucIxAAaQK402x31dnmPYoASBPAHWa9m846954EQJoASBMAaQK4Yfbn0bPPvzUBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNADd8+vrj6BEWmX3+rX04eoCtPPr3cYuL4v/ICUCcAEgTwB1mPfpnnXtPAiBNAHea7W4627xHEcBvj74jMrva9V5z2gC2uAPOclctX/ujThvAVkZfhNHnG40ASBPAK/c+Lx71LnvvXJ7//yWAJ40WwWjzzOLUAWy9FKMsXeU6t3DqAJ4x2wfEHn18T3/+67SfBt3TnyXcc7mODu8sTn8CPLMozy7yXkv57OM8c11nD80JsLItT4OzL+MRXj5++f7r6CH2cNTdb40QjpqjEJwT4B0/v31evARv//09i7j24nnhe13mBLhcxn9uv4XiNT/i9C+C4T2pAPZ892QE7v63pQJYYrYIZpv3KLkAltzdZlmqJXOW7v6XS+xF8GtLl3nERTnjNW0tdwKsZbTTYLR5ZpENYJRvcq1hlG+2zSj7FOiPtZb4iAWaefZR5AO4XNa9k++xTLPNOzIB/Db6h9dGn29WAnhl6+f0jyzcSLOcmQDeGOWF7ZYs/1/Zd4GuOftynP36HiWA/3HWJTnrdS0hgCvOtixnu561eA1wh5lfF1j89zkB7jDrEs06956cAA+a4TSw+PcTwJNGDMHiP04AC40QgsV/ngBWckQIFn85AWxgyxgs/boEsBO/mGpM3gbdiWUekwBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBI8yORN4zwWx+W8tNo1zkBSBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgzWeBSHMCkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiDtX4r5F9/HMwZsAAAAAElFTkSuQmCC">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAEI0lEQVR4nO3dS3ITSRRAUbmDfcCM5cBSWQ7M2Ak9gcDtaFmf+mXWPWdsQq+IdyslWbZfPn75/usCUf8cPQAcSQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgTQCkCYC0D0cPUPPz2+ebX/Pp648dJuFyuVxe/JG8bd2z8LcIYjsC2Mgai/+WENYngJVtsfhvCWE9XgSvaI/l3/NxCpwAKzhyIZ0GyzgBFjr6bnz0489OAAuMsnyjzDEjATxptKUbbZ5ZCOAJoy7bqHONTACkCeBBo99lR59vNAJ4wCzLNcucIxAAaQK402x31dnmPYoASBPAHWa9m846954EQJoASBMAaQK4Yfbn0bPPvzUBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNADd8+vrj6BEWmX3+rX04eoCtPPr3cYuL4v/ICUCcAEgTwB1mPfpnnXtPAiBNAHea7W4627xHEcBvj74jMrva9V5z2gC2uAPOclctX/ujThvAVkZfhNHnG40ASBPAK/c+Lx71LnvvXJ7//yWAJ40WwWjzzOLUAWy9FKMsXeU6t3DqAJ4x2wfEHn18T3/+67SfBt3TnyXcc7mODu8sTn8CPLMozy7yXkv57OM8c11nD80JsLItT4OzL+MRXj5++f7r6CH2cNTdb40QjpqjEJwT4B0/v31evARv//09i7j24nnhe13mBLhcxn9uv4XiNT/i9C+C4T2pAPZ892QE7v63pQJYYrYIZpv3KLkAltzdZlmqJXOW7v6XS+xF8GtLl3nERTnjNW0tdwKsZbTTYLR5ZpENYJRvcq1hlG+2zSj7FOiPtZb4iAWaefZR5AO4XNa9k++xTLPNOzIB/Db6h9dGn29WAnhl6+f0jyzcSLOcmQDeGOWF7ZYs/1/Zd4GuOftynP36HiWA/3HWJTnrdS0hgCvOtixnu561eA1wh5lfF1j89zkB7jDrEs06956cAA+a4TSw+PcTwJNGDMHiP04AC40QgsV/ngBWckQIFn85AWxgyxgs/boEsBO/mGpM3gbdiWUekwBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBI8yORN4zwWx+W8tNo1zkBSBMAaQIgTQCkCYA0AZAmANIEQJoASBMAaQIgzWeBSHMCkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiBNAKQJgDQBkCYA0gRAmgBIEwBpAiDtX4r5F9/HMwZsAAAAAElFTkSuQmCC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F4FD8'/%3E%3Crect x='24' y='12' width='16' height='26' rx='8' fill='white'/%3E%3Cpath d='M18 32a14 14 0 0 0 28 0' stroke='white' stroke-width='4' fill='none'/%3E%3Cpath d='M32 46v8M24 54h16' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+html { color-scheme: light; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; -webkit-text-size-adjust: 100%; }
+[hidden] { display: none !important; }
+
+/* Layout: a single column "exam desk" — topic card on top, the working surface below, one step at a time */
+:root {
+  --paper: #F3F5F7;
+  --card: #FFFFFF;
+  --ink: #142033;
+  --ink-2: #4A5668;
+  --line: #D6DCE4;
+  --accent: #1F4FD8;
+  --accent-soft: #E3EAFC;
+  --good: #11804A;
+  --good-soft: #DDF3E7;
+  --warn: #B86A00;
+  --warn-soft: #FCEFD9;
+  --bad: #C2362B;
+  --bad-soft: #FBE3E0;
+  --me: #1F4FD8;
+  --me-fg: #FFFFFF;
+  --partner: #E9EDF2;
+  --f-display: "Bricolage Grotesque", "IBM Plex Sans KR", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E131C; --card: #171E2A; --ink: #E7ECF3; --ink-2: #A3AEBF; --line: #2A3445;
+    --accent: #7FA2FF; --accent-soft: #1D2A4A; --good: #4FCB8A; --good-soft: #143326;
+    --warn: #F0B357; --warn-soft: #3A2C14; --bad: #FF8A7D; --bad-soft: #3D1D1A;
+    --me: #3E66E0; --me-fg: #FFFFFF; --partner: #222B3A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E131C; --card: #171E2A; --ink: #E7ECF3; --ink-2: #A3AEBF; --line: #2A3445;
+  --accent: #7FA2FF; --accent-soft: #1D2A4A; --good: #4FCB8A; --good-soft: #143326;
+  --warn: #F0B357; --warn-soft: #3A2C14; --bad: #FF8A7D; --bad-soft: #3D1D1A;
+  --me: #3E66E0; --me-fg: #FFFFFF; --partner: #222B3A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(26px, 6vw, 36px); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: 21px; font-weight: 700; }
+h3 { font-size: 16px; font-weight: 700; }
+p { margin: 0; }
+.muted { color: var(--ink-2); }
+.small { font-size: 13px; }
+.eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; }
+button, select, textarea, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn {
+  border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 10px 16px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 8px; justify-content: center; min-height: 44px;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.spacer { flex: 1; }
+
+header.top { display: flex; flex-direction: column; gap: 6px; }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+/* topic picker */
+.topics { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.topic {
+  text-align: left; border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 12px 14px;
+  display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center;
+}
+.topic:hover { border-color: var(--accent); }
+.topic .n { font-family: var(--f-mono); font-weight: 600; color: var(--accent); font-size: 15px; }
+.topic .t { font-weight: 500; }
+.topic .best { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 13px; color: var(--ink-2); font-weight: 500; }
+select { border: 1px solid var(--line); background: var(--card); border-radius: 8px; padding: 9px 10px; min-height: 42px; }
+
+/* exam card */
+.examcard {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px;
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+}
+.examcard .q { font-family: var(--f-display); font-weight: 700; font-size: 18px; line-height: 1.3; }
+.timer { font-family: var(--f-mono); font-weight: 600; font-size: 34px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; text-align: right; }
+.timer.low { color: var(--bad); }
+.timer-label { font-size: 12px; color: var(--ink-2); text-align: right; }
+.bar { height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; grid-column: 1 / -1; }
+.bar > i { display: block; height: 100%; background: var(--accent); width: 100%; transition: width 1s linear; }
+
+textarea {
+  width: 100%; border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 12px; resize: vertical;
+  line-height: 1.5;
+}
+#notes { min-height: 190px; font-family: var(--f-body); }
+
+details.ref { border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+details.ref > summary { padding: 12px 14px; cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 8px; }
+details.ref > summary::after { content: "+"; font-family: var(--f-mono); color: var(--ink-2); }
+details.ref[open] > summary::after { content: "−"; }
+.refbody { padding: 0 14px 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.refcat h4 { margin: 0 0 4px; font-size: 13px; font-weight: 600; }
+.refcat h4 span { color: var(--ink-2); font-weight: 400; }
+.refcat ul { margin: 0; padding-left: 16px; font-size: 13px; color: var(--ink-2); }
+.hints { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 14px 14px; }
+.hints h4 { margin: 0 0 4px; font-size: 13px; }
+.hints ul { margin: 0; padding-left: 16px; font-size: 13px; color: var(--ink-2); }
+
+/* chat */
+.chat { display: flex; flex-direction: column; gap: 10px; max-height: 52vh; min-height: 220px; overflow-y: auto; padding: 4px 2px; }
+.msg { max-width: 86%; padding: 10px 13px; border-radius: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.msg .who { display: block; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.75; margin-bottom: 2px; font-weight: 600; }
+.msg.me { align-self: flex-end; background: var(--me); color: var(--me-fg); border-bottom-right-radius: 4px; }
+.msg.partner { align-self: flex-start; background: var(--partner); border-bottom-left-radius: 4px; }
+.msg.sys { align-self: center; background: transparent; color: var(--ink-2); font-size: 13px; text-align: center; }
+.msg mark { background: color-mix(in srgb, var(--paper) 30%, transparent); color: inherit; border-radius: 4px; padding: 0 2px; text-decoration: underline; text-underline-offset: 3px; }
+.composer { display: flex; flex-direction: column; gap: 8px; }
+#say { min-height: 70px; max-height: 180px; }
+.mic.on { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; color: var(--ink-2); background: var(--card); }
+.chip.hit { background: var(--good-soft); border-color: var(--good); color: var(--good); font-weight: 600; }
+.chip.hit::before { content: "✓ "; }
+.chip.miss { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+
+/* results */
+.total { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; }
+.total .big { font-family: var(--f-mono); font-size: 52px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.total .big small { font-size: 20px; color: var(--ink-2); }
+.crit { display: flex; flex-direction: column; gap: 14px; }
+.crit-item { display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 1px solid var(--line); }
+.crit-item:first-child { border-top: 0; padding-top: 0; }
+.crit-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.score { font-family: var(--f-mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pill { font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 10px; }
+.pill.b4 { background: var(--good-soft); color: var(--good); }
+.pill.b3 { background: var(--accent-soft); color: var(--accent); }
+.pill.b2 { background: var(--warn-soft); color: var(--warn); }
+.pill.b1 { background: var(--bad-soft); color: var(--bad); }
+.meter { height: 6px; border-radius: 6px; background: var(--line); overflow: hidden; }
+.meter > i { display: block; height: 100%; background: var(--accent); }
+.fb { font-size: 14px; }
+.fb b { font-weight: 600; }
+.rewrite { border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.rewrite .o { color: var(--ink-2); text-decoration: line-through; text-decoration-color: var(--bad); }
+.rewrite .b { color: var(--good); font-weight: 600; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+.stat { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.stat .v { font-family: var(--f-mono); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stat .k { font-size: 12px; color: var(--ink-2); }
+ul.tips { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.notice { font-size: 13px; border-radius: 10px; padding: 10px 12px; background: var(--warn-soft); color: var(--ink); border: 1px solid var(--warn); }
+.history { display: flex; flex-direction: column; }
+.hrow { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.hrow:first-child { border-top: 0; }
+.hrow .s { font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.thinking { display: inline-flex; gap: 4px; }
+.thinking i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.4; animation: blink 1.2s infinite; }
+.thinking i:nth-child(2) { animation-delay: 0.2s; } .thinking i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .thinking i { animation: none; opacity: 0.8; } .bar > i { transition: none; } }
+@media (max-width: 520px) {
+  .examcard { grid-template-columns: 1fr; }
+  .timer, .timer-label { text-align: left; }
+  .hints { grid-template-columns: 1fr; }
+  .total { grid-template-columns: 1fr; }
+  .msg { max-width: 94%; }
+}
+
+.bigmic {
+  width: 100%; min-height: 64px; border-radius: 16px; font-size: 17px; font-weight: 700; border: 2px solid var(--accent);
+  background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.bigmic.listening { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); animation: pulse 1.4s infinite; }
+.bigmic.speaking { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+.bigmic.thinking { opacity: 0.7; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--bad) 20%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .bigmic.listening { animation: none; } }
+.interim { font-size: 14px; color: var(--ink-2); min-height: 20px; font-style: italic; }
+input[type="password"], input[type="text"] { border: 1px solid var(--line); background: var(--card); border-radius: 8px; padding: 10px; min-height: 42px; width: 100%; font-family: var(--f-mono); font-size: 13px; }
+.ok { color: var(--good); font-weight: 600; }
+.err { color: var(--bad); font-weight: 600; }
+.switch { display: flex; gap: 8px; }
+.switch button { flex: 1; }
+.switch button.on { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">College English 1 · Speaking Lab Midterm</span>
+    <h1>Speaking Lab Voice Simulator</h1>
+    <p class="muted">주제 카드를 뽑고 1분 준비한 뒤, 영어로 말하면 AI 파트너 Alex가 듣고 소리로 답해요. 4분이 끝나면 실제 루브릭 4개 항목으로 채점하고 피드백을 드려요.</p>
+  </header>
+
+  <!-- SETUP -->
+  <section id="s-setup" class="wrap" style="gap:16px" hidden>
+    <div class="panel">
+      <h2>처음 한 번만 설정</h2>
+      <div class="field">
+        <label for="apiKey">Anthropic API 키 (이 폰에만 저장돼요)</label>
+        <input type="password" id="apiKey" placeholder="sk-ant-api03-…" autocomplete="off">
+      </div>
+      <p class="muted small">키는 <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>에서 만들 수 있어요. 이 앱은 키를 서버로 보내지 않고 브라우저에서 Anthropic API로만 직접 호출해요.</p>
+      <div class="field">
+        <label for="wsId">Workspace ID (선택, wrkspc_… · 키가 워크스페이스에 속하지 않을 때만)</label>
+        <input type="text" id="wsId" placeholder="wrkspc_…" autocomplete="off">
+      </div>
+      <div class="row">
+        <button class="btn primary" id="saveKeyBtn" type="button">저장하고 연결 확인</button>
+        <span id="keyStatus" class="small"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 1: pick -->
+  <section id="s-pick" class="wrap" style="gap:20px" hidden>
+    <div class="panel">
+      <div class="row">
+        <h2>주제 카드 고르기</h2>
+        <span class="spacer"></span>
+        <button class="btn primary" id="randomBtn" type="button">랜덤 카드 뽑기</button>
+      </div>
+      <div class="topics" id="topics"></div>
+    </div>
+    <div class="panel">
+      <h3>시험 설정</h3>
+      <div class="settings">
+        <div class="field">
+          <label for="optTime">토론 시간</label>
+          <select id="optTime">
+            <option value="240">4분 (실전)</option>
+            <option value="360">6분</option>
+            <option value="0">시간 제한 없음</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="optStarter">먼저 시작하는 사람</label>
+          <select id="optStarter">
+            <option value="me">내가 먼저 (시작 표현 연습)</option>
+            <option value="partner">파트너가 먼저</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="optStyle">파트너 스타일</label>
+          <select id="optStyle">
+            <option value="balanced">보통 (동의·반대 섞기)</option>
+            <option value="challenging">까다로움 (자주 반박·끼어들기)</option>
+            <option value="quiet">소극적 (내가 이끌어야 함)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="optRate">파트너 말 속도</label>
+          <select id="optRate">
+            <option value="0.9">조금 느리게</option>
+            <option value="1" selected>보통</option>
+            <option value="1.15">빠르게</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="optModel">파트너 모델</label>
+          <select id="optModel">
+            <option value="claude-opus-5-5">Claude Opus 5.5 (기본)</option>
+            <option value="claude-sonnet-5-5">Claude Sonnet 5.5</option>
+            <option value="claude-haiku-5-5">Claude Haiku 5.5 (가장 빠름·저렴)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="optEnd">내 말 끝내기</label>
+          <select id="optEnd">
+            <option value="tap" selected>버튼을 탭할 때까지 기다림 (추천)</option>
+            <option value="4">4초 멈추면 자동으로 넘김</option>
+            <option value="7">7초 멈추면 자동으로 넘김</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="optMode">말하기 방식</label>
+          <select id="optMode">
+            <option value="auto">자동 (Alex가 말 끝나면 바로 듣기)</option>
+            <option value="tap">탭해서 말하기</option>
+          </select>
+        </div>
+      </div>
+      <p class="muted small" id="srSupport"></p>
+      <div class="row"><span class="spacer"></span><button class="btn ghost small" id="changeKeyBtn" type="button">API 키 바꾸기</button></div>
+    </div>
+    <div class="panel" id="historyPanel" hidden>
+      <h3>지난 연습 기록</h3>
+      <div class="history" id="history"></div>
+    </div>
+  </section>
+
+  <!-- STEP 2: prep -->
+  <section id="s-prep" class="wrap" style="gap:16px" hidden>
+    <div class="examcard">
+      <div>
+        <div class="eyebrow">Topic <span id="prepNum"></span> · 준비 시간</div>
+        <div class="q" id="prepQ"></div>
+      </div>
+      <div>
+        <div class="timer" id="prepTimer">1:00</div>
+        <div class="timer-label">메모하며 생각하기</div>
+      </div>
+      <div class="bar"><i id="prepBar"></i></div>
+    </div>
+    <div class="panel">
+      <div class="field">
+        <label for="notes">메모 (A4 한 장이라고 생각하세요)</label>
+        <textarea id="notes" placeholder="Advantages:&#10;- &#10;&#10;Disadvantages:&#10;- &#10;&#10;Example / my experience:&#10;- "></textarea>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="startDiscBtn" type="button">바로 토론 시작</button>
+        <button class="btn ghost" id="backBtn1" type="button">다른 주제</button>
+      </div>
+    </div>
+    <details class="ref" id="hintBox">
+      <summary>막히면 아이디어 힌트 보기</summary>
+      <div class="hints" id="hints"></div>
+    </details>
+    <details class="ref">
+      <summary>필수 기능 표현 10종 미리보기</summary>
+      <div class="refbody" id="refPrep"></div>
+    </details>
+  </section>
+
+  <!-- STEP 3: discussion -->
+  <section id="s-disc" class="wrap" style="gap:16px" hidden>
+    <div class="examcard">
+      <div>
+        <div class="eyebrow">Topic <span id="discNum"></span> · 토론 중 · 파트너 Alex</div>
+        <div class="q" id="discQ"></div>
+      </div>
+      <div>
+        <div class="timer" id="discTimer">4:00</div>
+        <div class="timer-label" id="discTimerLabel">남은 시간</div>
+      </div>
+      <div class="bar"><i id="discBar"></i></div>
+    </div>
+    <div class="panel">
+      <button class="bigmic" id="micBtn" type="button">🎤 탭해서 말하기</button>
+      <div class="interim" id="interim"></div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <details class="ref">
+        <summary>타이핑으로 말하기</summary>
+        <div class="composer" style="padding:0 14px 14px">
+          <textarea id="say" placeholder="영어로 입력… (Enter = 보내기)"></textarea>
+          <div class="row"><button class="btn" id="sendBtn" type="button">보내기</button></div>
+        </div>
+      </details>
+      <div class="row">
+        <button class="btn ghost" id="endBtn" type="button">끝내고 채점</button>
+        <span class="spacer"></span>
+        <span class="muted small" id="hitCount">표현 0 / 10</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="chips" id="liveChips"></div>
+      <details class="ref">
+        <summary>표현 모음 보기</summary>
+        <div class="refbody" id="refDisc"></div>
+      </details>
+      <details class="ref">
+        <summary>내 메모</summary>
+        <div style="padding:0 14px 14px"><p id="notesView" class="small" style="white-space:pre-wrap"></p></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- STEP 4: results -->
+  <section id="s-result" class="wrap" style="gap:16px" hidden>
+    <div class="panel">
+      <div class="eyebrow">결과 · Topic <span id="resNum"></span></div>
+      <div class="q" style="font-family:var(--f-display);font-weight:700;font-size:18px" id="resQ"></div>
+      <div id="resBody"></div>
+      <div class="row">
+        <button class="btn primary" id="againBtn" type="button">같은 주제 다시</button>
+        <button class="btn" id="homeBtn" type="button">다른 주제 고르기</button>
+        <button class="btn ghost" id="retryFbBtn" type="button" hidden>채점 다시 요청</button>
+      </div>
+    </div>
+    <details class="ref">
+      <summary>대화 전문 보기</summary>
+      <div style="padding:0 14px 14px" id="transcriptView"></div>
+    </details>
+  </section>
+</div>
+
+<script>
+const TOPICS = [
+  { q: "Discuss the advantages and disadvantages of using a smartphone in the classroom.",
+    pro: ["Instant access to information, dictionaries, and translation", "Useful learning apps, quizzes, and recording lectures", "Easy to take photos of slides and share notes"],
+    con: ["Distraction from social media, games, and messages", "Less face-to-face interaction and focus", "Cheating and inequality for students without good phones"] },
+  { q: "Discuss the advantages and disadvantages of learning English or any other foreign language.",
+    pro: ["Better job and study-abroad opportunities", "Understanding other cultures and people", "Brain benefits: memory and problem solving"],
+    con: ["Takes a lot of time, money, and stress (e.g. TOEIC, hagwons)", "Translation technology and AI make it less necessary", "Pressure to learn English can reduce interest in other subjects"] },
+  { q: "Discuss the advantages and disadvantages of attending hagwons or academies.",
+    pro: ["Extra help and systematic exam preparation", "Motivating environment and good teachers", "Helps students keep up in a competitive system"],
+    con: ["Expensive, increasing inequality between families", "Exhaustion, little free time or sleep", "Students become dependent and less self-directed"] },
+  { q: "Discuss the advantages and disadvantages of living at home vs living in a dormitory or one-room apartment while attending university.",
+    pro: ["Home: cheaper, home-cooked meals, family support", "Dorm: close to campus, easy to make friends", "One-room: independence and freedom"],
+    con: ["Home: long commute, less independence", "Dorm: roommates, rules, little privacy", "One-room: rent, loneliness, managing chores alone"] },
+  { q: "Discuss the advantages and disadvantages of SNU colleges requiring their students to take general education courses.",
+    pro: ["Broad knowledge and critical thinking across fields", "Chance to explore interests or change majors", "Meet students from other departments"],
+    con: ["Less time for major courses and career preparation", "Some courses feel irrelevant or are taken only for credits", "Heavy workload and competition for registration"] },
+  { q: "Discuss the advantages and disadvantages of growing up in Generation Z.",
+    pro: ["Digital natives: fast access to information and tools", "More open-minded and globally connected", "New career paths like content creation"],
+    con: ["Social media pressure, comparison, mental health issues", "Shorter attention span and less real-life interaction", "Economic difficulties: housing, jobs, competition"] },
+  { q: "Discuss the advantages and disadvantages of online learning vs face-to-face learning.",
+    pro: ["Online: flexible time and place, recorded lectures to rewatch", "Online: saves commuting time and money", "Face-to-face: direct interaction, discussion, and focus"],
+    con: ["Online: distraction, isolation, technical problems", "Online: hard to ask questions or build relationships", "Face-to-face: fixed schedule and commute"] },
+];
+
+// Functional phrase categories from chapters 4-5 (labels follow the student instructions)
+const CATS = [
+  { key: "start", ko: "토론 시작하기", en: "Starting a discussion", page: "p.23",
+    ex: ["Let's get started.", "Shall we begin with…?", "Today we're going to discuss…", "To begin with, …", "Why don't we start by talking about…?"],
+    re: /\b(let'?s (get )?(started|start|begin)|shall we (start|begin)|to (begin|start) with|why don'?t we (start|begin)|(today )?we('re| are) (going to|gonna) (discuss|talk)|let'?s talk about|the topic (today )?is|first of all|i'?d like to (start|begin))/i },
+  { key: "invite", ko: "상대 의견 묻기", en: "Inviting others to speak", page: "p.24",
+    ex: ["What do you think?", "How about you?", "What's your opinion on…?", "How do you feel about…?", "Would you like to add anything?"],
+    re: /\b(what do you think|how about you|what about you|what'?s your (opinion|view|take)|what is your (opinion|view)|how do you feel|do you (agree|think so)|would you like to (add|say)|any thoughts|what are your thoughts|have you ever|your turn)/i },
+  { key: "opinion", ko: "의견 말하기", en: "Expressing opinions", page: "p.24",
+    ex: ["In my opinion, …", "I believe that…", "Personally, I think…", "From my point of view, …", "It seems to me that…"],
+    re: /\b(in my (opinion|view)|i (strongly )?(think|believe|feel that|feel like)|personally|from my (point of view|perspective)|it seems to me|as far as i'?m concerned|i'?d say|if you ask me|my opinion is)/i },
+  { key: "agree", ko: "동의 / 반대하기", en: "Agreeing / disagreeing", page: "pp.24–25",
+    ex: ["I totally agree.", "That's a good point.", "You're absolutely right.", "I'm afraid I disagree.", "I see what you mean, but…"],
+    re: /\b(i (totally |completely |partly |kind of )?(agree|disagree)|i don'?t (really )?agree|exactly|that'?s (so )?true|absolutely|you'?re (absolutely |totally )?right|(that'?s a |good |great |fair )point|i couldn'?t agree more|same here|me too|i'?m afraid i|i see what you mean|i see your point)/i },
+  { key: "clarify", ko: "명확히 하기 (묻기/설명)", en: "Asking for / providing clarification", page: "pp.25–26",
+    ex: ["What do you mean by…?", "Could you explain that again?", "Do you mean that…?", "What I mean is…", "In other words, …"],
+    re: /\b(what do you mean|could you (please )?(explain|clarify|repeat|say that again)|can you (explain|clarify|repeat)|do you mean|sorry,? i didn'?t (catch|get|understand)|what i mean is|what i'?m (trying to )?say(ing)? is|in other words|let me (explain|rephrase|clarify|put it)|to put it (another way|simply)|i mean,? )/i },
+  { key: "interrupt", ko: "끼어들기", en: "Interrupting", page: "p.27",
+    ex: ["Sorry to interrupt, but…", "Can I add something here?", "May I jump in?", "Excuse me, could I just say…", "Before you go on, …"],
+    re: /\b(sorry (to|for) interrupt|excuse me|can i (just )?(add|say|jump in|interrupt)|may i (just )?(add|say|jump in|interrupt)|could i (just )?(add|say|jump in)|if i (could|may) (just )?(add|say|jump in)|before you go on|hold on|sorry,? but can i)/i },
+  { key: "track", ko: "주제로 돌아오기", en: "Staying on track", page: "p.28",
+    ex: ["Let's get back to the topic.", "Going back to what we were saying, …", "I think we're getting off track.", "Anyway, back to…", "Let's focus on…"],
+    re: /\b(get(ting)? back to|back to (the |our )?(topic|point|question|main)|going back to|we'?re (getting|going) off (topic|track)|off (the )?topic|to return to|let'?s focus on|anyway,? (back|let'?s|going)|coming back to)/i },
+  { key: "details", ko: "구체적으로 묻기", en: "Asking a speaker for details", page: "p.32",
+    ex: ["Could you give me an example?", "Can you tell me more about that?", "Could you be more specific?", "Why do you think so?", "Like what?"],
+    re: /\b((can|could) you give (me |us )?(an |some )?example|(can|could) you tell (me |us )?more|(can|could) you (elaborate|be more specific|expand on)|why do you (think|say|believe) (so|that)|like what\?|such as\?|what kind of|how so\?|what makes you (think|say)|for example\?)/i },
+  { key: "support", ko: "근거로 뒷받침하기", en: "Supporting a point", page: "p.32",
+    ex: ["For example, …", "That's because…", "In my experience, …", "To add to that, …", "Another reason is…"],
+    re: /\b(for (example|instance)|such as|(that'?s|this is|it'?s) because|the reason (is|why)|in my (own )?experience|from my experience|to add to (that|your point)|what'?s more|in addition|on top of that|another (reason|advantage|point|example)|according to|studies (show|have shown)|research shows|a good example)/i },
+  { key: "dispute", ko: "상대 논점 반박하기", en: "Disputing a point", page: "p.33",
+    ex: ["That may be true, but…", "I'm not sure that's always the case.", "I'm not convinced that…", "But don't you think…?", "The problem with that is…"],
+    re: /\b(that (may|might) be true,? but|i'?m not (so |really )?(sure|convinced)|that'?s not (always|necessarily|really)|not always the case|but don'?t you think|i doubt|the problem (with that )?is|but what about|on the other hand|however|i see (your point|what you mean),? but|that'?s true,? but)/i },
+];
+
+const RUBRIC = `Speaking Lab Midterm Exam Rubric (each criterion scored 3-10):
+Bands: Exceeds Expectations 10-9 | Meets Expectations 8-7 | Below Expectations 6-5 | Poor 4-3.
+
+1. Use of Expressions
+- Exceeds: Consistently uses a variety of appropriate expressions to give, ask for, and respond to opinions throughout the discussion.
+- Meets: Uses several appropriate expressions to give, ask for, and respond to opinions, but some expressions may be repeated.
+- Below: Attempts to use a few expressions throughout the discussion, but they are repetitive or used incorrectly.
+- Poor: Does not use expressions or misuses expressions, which impedes communication with a partner.
+
+2. Content Relevance & Detail
+- Exceeds: All opinions are coherent and relevant. Arguments are logical and convincing and are supported with detailed reasons and examples.
+- Meets: Opinions are usually coherent and relevant. Arguments are mostly logical and convincing. Reasons and examples are provided but may not be well-developed.
+- Below: Opinions may lack coherence and/or relevance. Arguments are not always logical or convincing. Supporting points are basic and lack detail.
+- Poor: There is little to no evidence of contributing coherent and relevant points to the discussion.
+
+3. Interactive Communication
+- Exceeds: Frequently engages in the discussion by initiating and responding to partners, asking questions, and demonstrating appropriate turn-taking.
+- Meets: Engages in the discussion sufficiently by responding to partners, asking questions, and demonstrating turn-taking. One of these strategies may be weak or missing.
+- Below: Attempts to interact but may not initiate or engage in the discussion effectively. There may be issues with inappropriate turn-taking.
+- Poor: Little to no evidence of interaction with a partner.
+
+4. Comprehensibility
+- Exceeds: Speaks clearly and distinctly throughout, with all words understood. Volume and pace are strong. Pausing for emphasis and no long hesitations.
+- Meets: Speaks clearly most of the time, but a few sounds and words are unclear. Minor issues with volume, pace, pausing, and inappropriate hesitations.
+- Below: Speaks clearly at times, but there may be significant errors that make understanding difficult. Major issues with volume, pace, pausing, hesitations.
+- Poor: Communication is very difficult to understand and incomprehensible at times.
+
+Required functional phrases (chapters 4-5): starting a discussion; inviting others to speak; expressing opinions; agreeing/disagreeing; asking for or providing clarification; interrupting; staying on track; asking a speaker for details; supporting your own or another speaker's point; disputing another speaker's point.`;
+
+const CRIT = [
+  { key: "expressions", ko: "Use of Expressions", sub: "기능 표현 활용" },
+  { key: "content", ko: "Content Relevance & Detail", sub: "내용 관련성·구체성" },
+  { key: "interaction", ko: "Interactive Communication", sub: "상호작용·턴테이킹" },
+  { key: "comprehensibility", ko: "Comprehensibility", sub: "명료성 (발음·속도·멈춤 추정)" },
+];
+
+
+
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.max(0, s) % 60).padStart(2, "0")}`;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+let state = null;
+
+// ---------- Anthropic API (called directly from the browser with the user's own key) ----------
+const API_URL = "https://api.anthropic.com/v1/messages";
+const GRADER_MODEL = "claude-opus-5-5";
+function apiKey() { return store.get("sl_key", ""); }
+function wsId() { return store.get("sl_ws", ""); }
+async function callClaude({ model, system, messages, maxTokens = 1024, effort = "low", signal }) {
+  const res = await fetch(API_URL, {
+    method: "POST", signal,
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey(),
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+      "anthropic-beta": "server-side-fallback-2026-07-01",
+      ...(wsId() ? { "anthropic-workspace-id": wsId() } : {}),
+    },
+    body: JSON.stringify({ model, max_tokens: maxTokens, system, messages, fallbacks: "default", output_config: { effort } }),
+  });
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const j = await res.json(); msg = j?.error?.message || msg; } catch {}
+    const e = new Error(msg); e.status = res.status; throw e;
+  }
+  const j = await res.json();
+  if (j.stop_reason === "refusal") throw Object.assign(new Error("refused"), { refusal: true });
+  return (j.content || []).filter((b) => b.type === "text").map((b) => b.text).join("").trim();
+}
+function apiErrorKo(e) {
+  if (e?.name === "AbortError") return "";
+  if (e?.status === 401) return "API 키가 올바르지 않아요. 키를 다시 확인해주세요.";
+  if (/workspace/i.test(e?.message || "")) return "이 키는 워크스페이스에 속하지 않은 키예요. console.anthropic.com에서 워크스페이스를 선택한 뒤 만든 키를 쓰거나, 아래 Workspace ID 칸에 워크스페이스 ID(wrkspc_…)를 넣어주세요.";
+  if (e?.status === 429) return "요청이 너무 잦거나 사용 한도에 걸렸어요. 잠시 후 다시 시도하세요.";
+  if (e?.status === 400 && /credit|balance/i.test(e.message)) return "API 크레딧이 부족해요. console.anthropic.com에서 충전하세요.";
+  if (e?.message === "Failed to fetch") return "네트워크 연결을 확인하세요.";
+  return "응답을 받지 못했어요: " + (e?.message || "알 수 없는 오류");
+}
+
+// ---------- setup / key ----------
+async function saveKey() {
+  const k = $("apiKey").value.trim();
+  if (!/^sk-ant-/.test(k)) { $("keyStatus").innerHTML = `<span class="err">sk-ant- 로 시작하는 키를 넣어주세요.</span>`; return; }
+  store.set("sl_key", k);
+  store.set("sl_ws", $("wsId").value.trim());
+  $("keyStatus").textContent = "연결 확인 중…"; $("saveKeyBtn").disabled = true;
+  try {
+    await callClaude({ model: "claude-haiku-5-5", messages: [{ role: "user", content: "Say OK." }], maxTokens: 16, effort: "low" });
+    $("keyStatus").innerHTML = `<span class="ok">연결됐어요!</span>`;
+    setTimeout(() => { show("s-pick"); renderTopics(); }, 600);
+  } catch (e) {
+    $("keyStatus").innerHTML = `<span class="err">${esc(apiErrorKo(e))}</span>`;
+  } finally { $("saveKeyBtn").disabled = false; }
+}
+$("saveKeyBtn").addEventListener("click", saveKey);
+$("apiKey").addEventListener("keydown", (e) => { if (e.key === "Enter") saveKey(); });
+$("changeKeyBtn").addEventListener("click", () => { $("apiKey").value = apiKey(); $("wsId").value = wsId(); $("keyStatus").textContent = ""; show("s-setup"); });
+
+function renderTopics() {
+  const hist = store.get("sl_history", []);
+  $("topics").innerHTML = TOPICS.map((t, i) => {
+    const best = hist.filter((h) => h.topic === i).reduce((m, h) => Math.max(m, h.total), 0);
+    return `<button class="topic" type="button" data-i="${i}"><span class="n">${i + 1}</span><span class="t">${esc(t.q.replace("Discuss the advantages and disadvantages of ", "…"))}</span><span class="best">${best ? "최고 " + best + "/40" : ""}</span></button>`;
+  }).join("");
+  $("topics").querySelectorAll(".topic").forEach((b) => b.addEventListener("click", () => startPrep(+b.dataset.i)));
+  if (hist.length) {
+    $("historyPanel").hidden = false;
+    $("history").innerHTML = hist.slice(0, 8).map((h) => `<div class="hrow"><span>${esc(h.date)} · Topic ${h.topic + 1}</span><span class="s">${h.total}/40</span></div>`).join("");
+  }
+}
+function refHTML() {
+  return CATS.map((c) => `<div class="refcat"><h4>${esc(c.en)} <span>· ${c.ko} (${c.page})</span></h4><ul>${c.ex.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></div>`).join("");
+}
+for (const k of ["optTime", "optStarter", "optStyle", "optRate", "optModel", "optMode", "optEnd"]) {
+  const v = store.get("sl_" + k, null);
+  if (v !== null) $(k).value = v;
+  $(k).addEventListener("change", () => store.set("sl_" + k, $(k).value));
+}
+$("refPrep").innerHTML = refHTML();
+$("refDisc").innerHTML = refHTML();
+$("randomBtn").addEventListener("click", () => startPrep(Math.floor(Math.random() * TOPICS.length)));
+
+function show(id) {
+  for (const s of ["s-setup", "s-pick", "s-prep", "s-disc", "s-result"]) $(s).hidden = s !== id;
+  window.scrollTo({ top: 0 });
+}
+
+// ---------- prep ----------
+let tick = null;
+function startPrep(i) {
+  clearInterval(tick);
+  const t = TOPICS[i];
+  state = { topic: i, turns: [], notes: "", duration: +$("optTime").value, starter: $("optStarter").value, style: $("optStyle").value,
+    rate: +$("optRate").value, model: $("optModel").value, auto: $("optMode").value === "auto", endMode: $("optEnd").value, startedAt: 0, elapsed: 0, ended: false, busy: false };
+  $("prepNum").textContent = i + 1; $("prepQ").textContent = t.q;
+  $("notes").value = "";
+  $("hintBox").open = false;
+  $("hints").innerHTML = `<div><h4>Advantages</h4><ul>${t.pro.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div><div><h4>Disadvantages</h4><ul>${t.con.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div>`;
+  show("s-prep");
+  let left = 60;
+  $("prepTimer").textContent = fmt(left); $("prepTimer").classList.remove("low"); $("prepBar").style.width = "100%";
+  tick = setInterval(() => {
+    left--;
+    $("prepTimer").textContent = fmt(left);
+    $("prepBar").style.width = (left / 60 * 100) + "%";
+    if (left <= 10) $("prepTimer").classList.add("low");
+    if (left <= 0) startDiscussion();
+  }, 1000);
+  warmVoice();
+}
+$("startDiscBtn").addEventListener("click", () => startDiscussion());
+$("backBtn1").addEventListener("click", () => { clearInterval(tick); show("s-pick"); renderTopics(); });
+
+// ---------- discussion ----------
+function startDiscussion() {
+  clearInterval(tick);
+  state.notes = $("notes").value;
+  $("discNum").textContent = state.topic + 1; $("discQ").textContent = TOPICS[state.topic].q;
+  $("notesView").textContent = state.notes.trim() || "(메모 없음)";
+  $("chat").innerHTML = ""; $("say").value = ""; $("interim").textContent = "";
+  renderChips();
+  show("s-disc");
+  warmVoice();
+  state.startedAt = Date.now();
+  updateTimer();
+  tick = setInterval(updateTimer, 1000);
+  if (state.starter === "partner") { addSys("파트너 Alex가 먼저 시작합니다."); partnerTurn(); }
+  else { addSys("토론을 시작하세요. 시작 표현으로 열어보세요!"); if (state.auto) listen(); }
+}
+function updateTimer() {
+  if (!state || state.ended) return;
+  const el = Math.floor((Date.now() - state.startedAt) / 1000);
+  state.elapsed = el;
+  if (state.duration) {
+    const left = state.duration - el;
+    $("discTimer").textContent = fmt(Math.max(0, left));
+    $("discTimerLabel").textContent = "남은 시간";
+    $("discBar").style.width = Math.max(0, left / state.duration * 100) + "%";
+    $("discTimer").classList.toggle("low", left <= 30);
+    if (left <= 0) finish("time");
+  } else {
+    $("discTimer").textContent = fmt(el);
+    $("discTimerLabel").textContent = "경과 시간";
+    $("discBar").style.width = "100%";
+  }
+}
+function addMsg(role, text) {
+  const d = document.createElement("div");
+  d.className = "msg " + (role === "user" ? "me" : "partner");
+  d.innerHTML = `<span class="who">${role === "user" ? "You" : "Alex"}</span>${role === "user" ? highlight(text) : esc(text)}`;
+  $("chat").appendChild(d);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return d;
+}
+function addSys(text) {
+  const d = document.createElement("div");
+  d.className = "msg sys"; d.textContent = text;
+  $("chat").appendChild(d); $("chat").scrollTop = $("chat").scrollHeight;
+  return d;
+}
+function highlight(text) {
+  const ranges = [];
+  for (const c of CATS) for (const m of text.matchAll(new RegExp(c.re.source, "gi"))) if (m[0]) ranges.push([m.index, m.index + m[0].length]);
+  ranges.sort((a, b) => a[0] - b[0]);
+  let out = "", pos = 0;
+  for (const [s, e] of ranges) {
+    if (e <= pos) continue;
+    const st = Math.max(s, pos);
+    out += esc(text.slice(pos, st)) + "<mark>" + esc(text.slice(st, e)) + "</mark>";
+    pos = e;
+  }
+  return out + esc(text.slice(pos));
+}
+function usedCats() {
+  const hits = {};
+  for (const t of state.turns) if (t.role === "user") for (const c of CATS) { const m = t.content.match(c.re); if (m) (hits[c.key] ||= []).push(m[0]); }
+  return hits;
+}
+function renderChips() {
+  const hits = state ? usedCats() : {};
+  $("liveChips").innerHTML = CATS.map((c) => `<span class="chip ${hits[c.key] ? "hit" : ""}" title="${esc(c.en)}">${c.ko}</span>`).join("");
+  $("hitCount").textContent = `표현 ${Object.keys(hits).length} / ${CATS.length}`;
+}
+
+function submitUser(text, m) {
+  text = text.trim();
+  if (!text || state.ended || state.busy) return;
+  state.turns.push({ role: "user", content: text, t: state.elapsed, m });
+  addMsg("user", text);
+  renderChips();
+  partnerTurn();
+}
+$("sendBtn").addEventListener("click", () => { const t = $("say").value; $("say").value = ""; submitUser(t); });
+$("say").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); const t = $("say").value; $("say").value = ""; submitUser(t); } });
+$("endBtn").addEventListener("click", () => finish("manual"));
+
+function partnerSystem() {
+  const t = TOPICS[state.topic];
+  const style = {
+    balanced: "Mix agreeing and disagreeing naturally. Sometimes ask the student for an example or detail, sometimes invite them to share their view.",
+    challenging: "Be a lively, slightly challenging partner: dispute the student's points fairly often ('That may be true, but...'), occasionally jump in with 'Sorry to interrupt, but...', and push them to give reasons and examples.",
+    quiet: "Be a fairly passive partner: give short answers (1-2 sentences), rarely ask questions, and let the student lead the discussion. Only add a new point when the student invites you.",
+  }[state.style];
+  return `You are role-playing "Alex", a Korean first-year student at Seoul National University, in a College English 1 Speaking Lab midterm exam. You and the student are discussion partners. The discussion card says: "${t.q}"
+
+The student's words reach you through speech recognition, so they may contain transcription errors, missing punctuation, or odd words; interpret them charitably as spoken English. Your reply will be read aloud by a text-to-speech voice.
+
+How to behave:
+- Speak like a real B2-level university student in a spoken discussion: natural, friendly, contractions, 2-3 short sentences (about 20-45 words). Plain spoken sentences only: no lists, headings, emojis, asterisks, quotation marks, or stage directions.
+- Model the functional phrases from the course naturally (starting a discussion, inviting others to speak, expressing opinions, agreeing/disagreeing, clarification, interrupting, staying on track, asking for details, supporting or disputing a point), but don't cram them.
+- Respond directly to what the student just said before adding your own point. Bring fresh, concrete Korean-university-life examples (hagwons, SNU, dorms, KakaoTalk, commuting from Gyeonggi-do, etc.).
+- End most turns by handing the floor back (a question or an invitation), so the student keeps talking.
+- If the student goes off topic, steer back politely ("Anyway, getting back to...").
+- If the student's words are unclear, ask for clarification as a real partner would ("Sorry, do you mean...?").
+- ${style}
+- Never give feedback, corrections, or scores during the discussion, and never mention that you are an AI. Stay in character. Output only Alex's spoken words.`;
+}
+
+let turnCtl = null;
+async function partnerTurn() {
+  if (state.ended) return;
+  state.busy = true;
+  setMic("thinking");
+  const bubble = addMsg("partner", "");
+  bubble.innerHTML = `<span class="who">Alex</span><span class="thinking" aria-label="Alex is thinking"><i></i><i></i><i></i></span>`;
+  const messages = [];
+  if (!state.turns.length) messages.push({ role: "user", content: "(The exam timer has started. Open the discussion now as Alex, in 2-3 sentences, and invite the student to share their view.)" });
+  for (const t of state.turns.slice(-20)) messages.push({ role: t.role, content: t.content });
+  turnCtl = new AbortController();
+  let text = "";
+  try {
+    text = await callClaude({ model: state.model, system: partnerSystem(), messages, maxTokens: 400, effort: "low", signal: turnCtl.signal });
+  } catch (e) {
+    const msg = apiErrorKo(e);
+    if (msg) addSys(msg);
+    text = e?.refusal ? "Sorry, could you say that again in a different way?" : "";
+  }
+  if (state.ended) return;
+  if (!text) { bubble.remove(); state.busy = false; setMic("idle"); if (state.auto) listen(); return; }
+  bubble.innerHTML = `<span class="who">Alex</span>${esc(text)}`;
+  $("chat").scrollTop = $("chat").scrollHeight;
+  state.turns.push({ role: "assistant", content: text, t: state.elapsed });
+  state.busy = false;
+  speak(text, () => { if (!state.ended && state.auto) listen(); else setMic("idle"); });
+}
+
+// ---------- voice: TTS ----------
+let voiceReady = false;
+function pickVoice() {
+  const vs = speechSynthesis.getVoices();
+  return vs.find((v) => /en-US/i.test(v.lang) && /natural|google us|samantha|aria|jenny|ava|allison/i.test(v.name))
+    || vs.find((v) => /en-US/i.test(v.lang)) || vs.find((v) => /^en/i.test(v.lang)) || null;
+}
+function warmVoice() {
+  // iOS only lets speech start from a user gesture; an empty utterance here unlocks it for the discussion
+  if (voiceReady || !("speechSynthesis" in window)) return;
+  try { speechSynthesis.getVoices(); const u = new SpeechSynthesisUtterance(""); speechSynthesis.speak(u); voiceReady = true; } catch {}
+}
+function speak(text, done) {
+  if (!("speechSynthesis" in window)) { done?.(); return; }
+  try {
+    stopListening();
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US"; u.rate = state?.rate || 1; u.pitch = 1;
+    const v = pickVoice(); if (v) u.voice = v;
+    let finished = false;
+    const fin = () => { if (finished) return; finished = true; done?.(); };
+    u.onend = fin; u.onerror = fin;
+    setMic("speaking");
+    speechSynthesis.speak(u);
+    // some phones never fire onend; fall back after an estimate
+    setTimeout(fin, Math.min(30000, 1500 + text.length * 70 / (state?.rate || 1)));
+  } catch { done?.(); }
+}
+
+// ---------- voice: STT ----------
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, listening = false, heard = "", committed = "", sendRequested = false, turnM = null;
+if (!SR) {
+  $("srSupport").innerHTML = "이 브라우저는 음성 인식을 지원하지 않아요. 안드로이드는 <b>Chrome</b>, 아이폰은 <b>Safari</b>로 열어주세요. (타이핑 입력은 가능해요)";
+  $("optMode").value = "tap";
+} else {
+  $("srSupport").textContent = "처음 말할 때 마이크 사용을 허용해주세요. 조용한 곳에서 또박또박 말하면 인식이 잘 돼요.";
+}
+function setMic(mode) {
+  const b = $("micBtn");
+  b.className = "bigmic " + (mode === "idle" ? "" : mode);
+  const endHint = state?.endMode === "tap" ? "말 끝나면 탭" : `${state?.endMode}초 멈추면 자동 전송`;
+  b.textContent = { idle: "🎤 탭해서 말하기", listening: `● 듣는 중… (${endHint})`, thinking: "… Alex가 생각 중", speaking: "🔊 Alex가 말하는 중 (탭하면 끼어들기)" }[mode];
+  b.disabled = mode === "thinking";
+}
+// One "turn" of listening may span several recognizer sessions (phones stop the recognizer after a pause).
+// `committed` keeps what earlier sessions heard; the turn ends only on tap, or on silence when that mode is chosen.
+function newTurnMetrics() { return { start: 0, last: 0, confs: [], pauses: 0, longest: 0, restarts: 0 }; }
+function listen(resume) {
+  if (!SR || listening || state?.ended || state?.busy) return;
+  try {
+    rec = new SR();
+    rec.lang = "en-US"; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
+    if (!resume) { committed = ""; turnM = newTurnMetrics(); sendRequested = false; }
+    heard = committed;
+    let sessionFinal = "";
+    let silenceTimer = null;
+    const silenceMs = state.endMode === "tap" ? 0 : (+state.endMode) * 1000;
+    const armSilence = () => { if (!silenceMs) return; clearTimeout(silenceTimer); silenceTimer = setTimeout(() => { if (listening && heard.trim()) stopListening(true); }, silenceMs); };
+    rec.onresult = (e) => {
+      const now = Date.now();
+      if (!turnM.start) turnM.start = now;
+      if (turnM.last) { const gap = now - turnM.last; if (gap > 1500) { turnM.pauses++; turnM.longest = Math.max(turnM.longest, gap); } }
+      turnM.last = now;
+      let fin = "", tmp = "";
+      for (let i = 0; i < e.results.length; i++) {
+        const r = e.results[i];
+        if (r.isFinal) { fin += r[0].transcript + " "; if (i >= e.resultIndex && typeof r[0].confidence === "number" && r[0].confidence > 0) turnM.confs.push(r[0].confidence); }
+        else tmp += r[0].transcript;
+      }
+      sessionFinal = fin;
+      heard = (committed + " " + fin + tmp).replace(/\s+/g, " ").trim();
+      $("interim").textContent = heard;
+      armSilence();
+    };
+    rec.onerror = (e) => {
+      if (e.error === "not-allowed" || e.error === "service-not-allowed") { addSys("마이크 사용이 차단됐어요. 브라우저 설정에서 마이크를 허용한 뒤 다시 시도하거나, 타이핑으로 말하세요."); state.auto = false; sendRequested = true; }
+      else if (e.error !== "no-speech" && e.error !== "aborted") addSys("음성 인식 오류: " + e.error);
+    };
+    rec.onend = () => {
+      clearTimeout(silenceTimer);
+      const wasListening = listening; listening = false;
+      committed = (committed + " " + sessionFinal).replace(/\s+/g, " ").trim();
+      const text = committed;
+      const bySilence = silenceMs && wasListening && heard.trim() && !sendRequested && turnM.last && (Date.now() - turnM.last) >= silenceMs - 300;
+      if (wasListening && !sendRequested && !bySilence && !state.ended && !state.busy) {
+        // the phone stopped the recognizer on its own: keep the turn open, don't hand over to Alex
+        turnM.restarts++;
+        setTimeout(() => listen(true), 150);
+        return;
+      }
+      heard = ""; $("interim").textContent = "";
+      if (text) {
+        const m = turnM || newTurnMetrics();
+        const dur = m.start ? Math.max(1, Math.round((m.last - m.start) / 1000)) : 0;
+        submitUser(text, { dur, conf: m.confs.length ? m.confs.reduce((a, b) => a + b, 0) / m.confs.length : null, low: m.confs.filter((c) => c < 0.7).length, segs: m.confs.length, pauses: m.pauses, longest: Math.round(m.longest / 100) / 10 });
+        committed = ""; return;
+      }
+      committed = "";
+      setMic("idle");
+      if (wasListening && state?.auto && !state.ended && !state.busy) setTimeout(() => listen(), 250);
+    };
+    rec.start();
+    listening = true;
+    setMic("listening");
+  } catch { setMic("idle"); }
+}
+function stopListening(send) {
+  if (!rec) return;
+  sendRequested = !!send;
+  try { if (send) rec.stop(); else { heard = ""; committed = ""; rec.abort(); } } catch {}
+  if (!send) { listening = false; $("interim").textContent = ""; }
+}
+$("micBtn").addEventListener("click", () => {
+  if (!state || state.ended) return;
+  if (speechSynthesis.speaking) { speechSynthesis.cancel(); return; } // interrupt Alex; onend fallback resumes listening
+  if (listening) { stopListening(true); return; }
+  if (!SR) { document.querySelector("#s-disc details.ref").open = true; $("say").focus(); return; }
+  listen();
+});
+
+// ---------- finish & feedback ----------
+function finish(reason) {
+  if (!state || state.ended) return;
+  state.ended = true;
+  clearInterval(tick);
+  stopListening(false);
+  turnCtl?.abort();
+  try { speechSynthesis.cancel(); } catch {}
+  const leftover = $("say").value.trim();
+  if (leftover) state.turns.push({ role: "user", content: leftover, t: state.elapsed });
+  state.reason = reason;
+  showResults();
+}
+function localStats() {
+  const mine = state.turns.filter((t) => t.role === "user");
+  const words = mine.reduce((n, t) => n + (t.content.match(/[A-Za-z']+/g) || []).length, 0);
+  const qs = mine.reduce((n, t) => n + (t.content.match(/\?/g) || []).length + (t.content.match(/\b(what|how|why|do you|don't you|could you|can you|would you)\b/gi) || []).length, 0);
+  const allWords = state.turns.reduce((n, t) => n + (t.content.match(/[A-Za-z']+/g) || []).length, 0);
+  const vm = mine.map((t) => t.m).filter(Boolean);
+  const spokeSec = vm.reduce((n, m) => n + (m.dur || 0), 0);
+  const spokenWords = mine.filter((t) => t.m).reduce((n, t) => n + (t.content.match(/[A-Za-z']+/g) || []).length, 0);
+  const confs = vm.filter((m) => m.conf != null);
+  const voice = vm.length ? {
+    turns: vm.length,
+    wpm: spokeSec ? Math.round(spokenWords / spokeSec * 60) : null,
+    conf: confs.length ? Math.round(confs.reduce((n, m) => n + m.conf, 0) / confs.length * 100) : null,
+    lowPct: vm.reduce((n, m) => n + m.segs, 0) ? Math.round(vm.reduce((n, m) => n + m.low, 0) / vm.reduce((n, m) => n + m.segs, 0) * 100) : null,
+    pauses: vm.reduce((n, m) => n + m.pauses, 0),
+    longest: Math.max(0, ...vm.map((m) => m.longest || 0)),
+  } : null;
+  return { turns: mine.length, words, avg: mine.length ? Math.round(words / mine.length) : 0, questions: qs, share: allWords ? Math.round(words / allWords * 100) : 0, time: state.elapsed, voice };
+}
+function transcriptText() {
+  return state.turns.map((t) => `[${fmt(t.t || 0)}] ${t.role === "user" ? "STUDENT" : "PARTNER (Alex)"}: ${t.content}`).join("\n");
+}
+function band(s) { return s >= 9 ? ["Exceeds", "b4"] : s >= 7 ? ["Meets", "b3"] : s >= 5 ? ["Below", "b2"] : ["Poor", "b1"]; }
+
+async function showResults() {
+  show("s-result");
+  $("resNum").textContent = state.topic + 1; $("resQ").textContent = TOPICS[state.topic].q;
+  $("transcriptView").innerHTML = state.turns.map((t) => `<p class="small" style="margin:0 0 8px"><b>${t.role === "user" ? "You" : "Alex"}</b> <span class="muted">${fmt(t.t || 0)}</span><br>${esc(t.content)}</p>`).join("") || `<p class="muted small">대화가 없어요.</p>`;
+  const st = localStats();
+  const hits = usedCats();
+  const statsHTML = `<div class="stats">
+    <div class="stat"><div class="v">${fmt(st.time)}</div><div class="k">토론 시간</div></div>
+    <div class="stat"><div class="v">${st.turns}</div><div class="k">내 발언 수</div></div>
+    <div class="stat"><div class="v">${st.words}</div><div class="k">내 단어 수</div></div>
+    <div class="stat"><div class="v">${st.share}%</div><div class="k">내 발화 비중</div></div>
+    <div class="stat"><div class="v">${st.questions}</div><div class="k">질문 수</div></div>
+    <div class="stat"><div class="v">${Object.keys(hits).length}/10</div><div class="k">표현 카테고리</div></div>
+    ${st.voice ? `
+    <div class="stat"><div class="v">${st.voice.wpm ?? "–"}</div><div class="k">말 속도 (단어/분)</div></div>
+    <div class="stat"><div class="v">${st.voice.conf != null ? st.voice.conf + "%" : "–"}</div><div class="k">인식 명료도</div></div>
+    <div class="stat"><div class="v">${st.voice.pauses}</div><div class="k">1.5초+ 멈춤</div></div>
+    <div class="stat"><div class="v">${st.voice.longest ? st.voice.longest + "s" : "–"}</div><div class="k">가장 긴 멈춤</div></div>` : ""}
+  </div>
+  <div class="chips">${CATS.map((c) => `<span class="chip ${hits[c.key] ? "hit" : "miss"}" title="${esc(c.en)}">${c.ko}</span>`).join("")}</div>`;
+  if (st.turns === 0) {
+    $("resBody").innerHTML = statsHTML + `<p class="notice">발언이 없어 채점할 수 없어요. 다시 시도해보세요.</p>`;
+    return;
+  }
+  $("resBody").innerHTML = statsHTML + `<p class="muted"><span class="thinking"><i></i><i></i><i></i></span> 루브릭으로 채점 중이에요… (보통 20~60초)</p>`;
+  $("retryFbBtn").hidden = true;
+  await grade(statsHTML, st, hits);
+}
+
+function gradePrompt(st) {
+  return `You are an experienced, fair Speaking Lab tutor at Seoul National University grading a College English 1 midterm discussion (1 min prep, ${state.duration ? state.duration / 60 + " min" : "untimed"} discussion with a partner). Grade ONLY the STUDENT, using the official rubric below. The partner (Alex) was an AI practice partner; do not grade Alex.
+
+${RUBRIC}
+
+Important context:
+- The student SPOKE; their words were transcribed by phone speech recognition. You have the transcript plus measured delivery signals (below). Use BOTH for Comprehensibility:
+  * Pronunciation/clarity: the recognizer's confidence (100% = every word recognized cleanly; under ~75% suggests unclear pronunciation), the share of low-confidence segments, and odd or garbled words in the transcript that look like mis-hearings of a Korean-accented pronunciation (e.g. "rice" for "lice", "sink" for "think", dropped word endings, "pace" for "face"). Point out the specific words that were probably mispronounced and give a concrete tip for each (sound, stress, or linking).
+  * Pace: words per minute while speaking. Roughly 100-150 wpm is natural for a discussion; well under 90 reads as labored, well over 170 as rushed.
+  * Hesitation: number of pauses over 1.5 s and the longest pause. Long pauses mid-turn count as "inappropriate hesitations" in the rubric; fillers (um, uh, like) in the transcript do too.
+  * Volume cannot be measured; say so briefly once.
+  These are proxies, so phrase pronunciation findings as "probably" and keep them specific.
+- Be realistic: a real tutor would hear 4 minutes of speech. If the student said very little, scores must reflect that.
+- Measured stats: student turns ${st.turns}, student words ${st.words}, average words per turn ${st.avg}, questions asked ${st.questions}, student share of all words ${st.share}%, time used ${fmt(st.time)}${state.reason === "manual" && state.duration && st.time < state.duration - 15 ? " (ended early, before the time limit)" : ""}.
+- Delivery signals${st.voice ? `: spoken turns ${st.voice.turns}, pace ${st.voice.wpm ?? "n/a"} wpm, recognizer confidence ${st.voice.conf != null ? st.voice.conf + "%" : "n/a"}, low-confidence segments ${st.voice.lowPct != null ? st.voice.lowPct + "%" : "n/a"}, pauses over 1.5 s: ${st.voice.pauses}, longest pause ${st.voice.longest || 0} s. Per-turn: ${state.turns.filter((t) => t.role === "user" && t.m).map((t) => `[${fmt(t.t)}] ${t.m.dur}s, conf ${t.m.conf != null ? Math.round(t.m.conf * 100) + "%" : "n/a"}, pauses ${t.m.pauses}`).join("; ")}` : ": none (the student typed instead of speaking, so judge Comprehensibility from the text only and say pronunciation could not be assessed)"}.
+- Student's 1-minute prep notes: """${(state.notes || "(none)").slice(0, 1500)}"""
+
+Discussion topic: "${TOPICS[state.topic].q}"
+
+Transcript:
+${transcriptText().slice(0, 20000)}
+
+Write all feedback in natural Korean (keep English quotes and phrases in English). Reply with ONLY one JSON object, no markdown fences, in exactly this shape:
+{
+  "scores": {"expressions": 3-10, "content": 3-10, "interaction": 3-10, "comprehensibility": 3-10},
+  "summary_ko": "2-3 sentences: overall impression and the single most important thing to fix",
+  "criteria": {
+    "expressions": {"good_ko": "what worked, quoting the student's words", "improve_ko": "concrete fix"},
+    "content": {"good_ko": "...", "improve_ko": "..."},
+    "interaction": {"good_ko": "...", "improve_ko": "..."},
+    "comprehensibility": {"good_ko": "...", "improve_ko": "..."}
+  },
+  "pronunciation_ko": [{"word": "the word or phrase as the student probably said it", "heard_as": "how the recognizer wrote it (verbatim from transcript)", "tip_ko": "one-line pronunciation tip"}],
+  "delivery_ko": "2-3 sentences on pace, pausing, and fluency, citing the measured numbers",
+  "phrases_used": [{"category": "one of the 10 required categories", "quote": "exact student words"}],
+  "phrases_missing": [{"category": "required category the student did not use", "try": "one natural English phrase they could have used at a specific moment in this discussion"}],
+  "rewrites": [{"original": "a student sentence (verbatim)", "better": "a more natural, exam-ready version", "why_ko": "short reason"}],
+  "next_tips_ko": ["3 short, specific practice tips for the next attempt on this topic, including 1 useful idea or example they could add"]
+}
+Give 2-4 rewrites, focusing on the sentences that would gain the most.`;
+}
+function parseJSON(text) {
+  try { return JSON.parse(text); } catch {}
+  const m = text.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) { try { return JSON.parse(m[1]); } catch {} }
+  const a = text.indexOf("{"), b = text.lastIndexOf("}");
+  if (a >= 0 && b > a) { try { return JSON.parse(text.slice(a, b + 1)); } catch {} }
+  return null;
+}
+async function grade(statsHTML, st, hits) {
+  try {
+    const text = await callClaude({ model: GRADER_MODEL, messages: [{ role: "user", content: gradePrompt(st) }], maxTokens: 4000, effort: "high" });
+    const r = parseJSON(text);
+    if (!r || !r.scores) throw new Error("채점 결과 형식이 올바르지 않아요.");
+    renderFeedback(statsHTML, r, st);
+  } catch (e) {
+    renderLocalOnly(statsHTML, st, hits, apiErrorKo(e) || "채점에 실패했어요.");
+    $("retryFbBtn").hidden = false;
+    $("retryFbBtn").onclick = () => { $("retryFbBtn").hidden = true; $("resBody").innerHTML = statsHTML + `<p class="muted"><span class="thinking"><i></i><i></i><i></i></span> 다시 채점 중이에요…</p>`; grade(statsHTML, st, hits); };
+  }
+}
+function renderLocalOnly(statsHTML, st, hits, msg) {
+  const used = Object.entries(hits).map(([k, v]) => `<li><b>${esc(CATS.find((c) => c.key === k).en)}</b>: “${esc(v[0])}”</li>`).join("");
+  $("resBody").innerHTML = statsHTML + `<p class="notice">${esc(msg)}</p>${used ? `<h3>사용한 표현</h3><ul class="tips small">${used}</ul>` : ""}`;
+}
+function clampScore(v) { v = Math.round(Number(v)); return isFinite(v) ? Math.min(10, Math.max(3, v)) : 3; }
+function renderFeedback(statsHTML, r, st) {
+  const sc = {}; let total = 0;
+  for (const c of CRIT) { sc[c.key] = clampScore(r?.scores?.[c.key]); total += sc[c.key]; }
+  const [tb, tcls] = band(total / 4);
+  const crit = CRIT.map((c) => {
+    const [b, cls] = band(sc[c.key]);
+    const f = r?.criteria?.[c.key] || {};
+    return `<div class="crit-item">
+      <div class="crit-head"><h3>${c.ko} <span class="muted small" style="font-family:var(--f-body);font-weight:400">${c.sub}</span></h3><span class="row" style="gap:8px"><span class="pill ${cls}">${b}</span><span class="score">${sc[c.key]}/10</span></span></div>
+      <div class="meter"><i style="width:${sc[c.key] * 10}%"></i></div>
+      ${f.good_ko ? `<p class="fb"><b>잘한 점</b> ${esc(f.good_ko)}</p>` : ""}
+      ${f.improve_ko ? `<p class="fb"><b>개선할 점</b> ${esc(f.improve_ko)}</p>` : ""}
+    </div>`;
+  }).join("");
+  const used = (r.phrases_used || []).map((p) => `<li><b>${esc(p.category)}</b>: “${esc(p.quote)}”</li>`).join("");
+  const missing = (r.phrases_missing || []).map((p) => `<li><b>${esc(p.category)}</b> → <i>${esc(p.try)}</i></li>`).join("");
+  const rewrites = (r.rewrites || []).map((w) => `<div class="rewrite"><span class="o">${esc(w.original)}</span><span class="b">${esc(w.better)}</span><span class="muted small">${esc(w.why_ko)}</span></div>`).join("");
+  const tips = (r.next_tips_ko || []).map((t) => `<li>${esc(t)}</li>`).join("");
+  const pron = (r.pronunciation_ko || []).map((p) => `<li><b>${esc(p.word)}</b> → 들린 대로: “${esc(p.heard_as)}” <span class="muted">${esc(p.tip_ko)}</span></li>`).join("");
+  $("resBody").innerHTML = `
+    <div class="total"><div class="big">${total}<small>/40</small></div><div class="row" style="gap:8px;flex-direction:column;align-items:flex-start"><span class="pill ${tcls}">평균 ${tb} Expectations</span><p>${esc(r.summary_ko || "")}</p></div></div>
+    ${statsHTML}
+    <div class="crit">${crit}</div>
+    ${r.delivery_ko || pron ? `<div><h3>발음·속도·멈춤</h3>${r.delivery_ko ? `<p class="fb">${esc(r.delivery_ko)}</p>` : ""}${pron ? `<ul class="tips small">${pron}</ul>` : ""}</div>` : ""}
+    ${used ? `<div><h3>사용한 기능 표현</h3><ul class="tips small">${used}</ul></div>` : ""}
+    ${missing ? `<div><h3>이 순간엔 이렇게 써볼 수 있어요</h3><ul class="tips small">${missing}</ul></div>` : ""}
+    ${rewrites ? `<div style="display:flex;flex-direction:column;gap:8px"><h3>문장 다듬기</h3>${rewrites}</div>` : ""}
+    ${tips ? `<div><h3>다음 연습 팁</h3><ul class="tips">${tips}</ul></div>` : ""}
+    <p class="muted small">발음은 음성 인식 명료도와 잘못 들린 단어로, 속도와 멈춤은 실제 측정값으로 추정했어요. 성량은 측정되지 않아요. 실제 점수는 튜터 판단에 따라 다를 수 있어요.</p>`;
+  const hist = store.get("sl_history", []);
+  const d = new Date();
+  hist.unshift({ topic: state.topic, total, date: `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}` });
+  store.set("sl_history", hist.slice(0, 30));
+}
+$("againBtn").addEventListener("click", () => startPrep(state.topic));
+$("homeBtn").addEventListener("click", () => { show("s-pick"); renderTopics(); });
+
+// boot
+if (apiKey()) { show("s-pick"); renderTopics(); } else show("s-setup");
+</script>
+</body>
+</html>
