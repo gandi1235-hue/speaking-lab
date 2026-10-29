@@ -311,7 +311,7 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
 <body>
 <div class="wrap">
   <header class="top">
-    <span class="eyebrow">College English 1 · Speaking Lab Midterm · v8</span>
+    <span class="eyebrow">College English 1 · Speaking Lab Midterm · v9</span>
     <h1>Speaking Lab Voice Simulator</h1>
     <p class="muted">주제 카드를 뽑고 1분 준비한 뒤, 영어로 말하면 AI 파트너 Alex가 듣고 소리로 답해요. 4분이 끝나면 실제 루브릭 4개 항목으로 채점하고 피드백을 드려요.</p>
   </header>
@@ -358,6 +358,13 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
     <div class="panel">
       <h3>시험 설정</h3>
       <div class="settings">
+        <div class="field">
+          <label for="optLang">토론 언어</label>
+          <select id="optLang">
+            <option value="en" selected>English (실전)</option>
+            <option value="ko">한국어 (워밍업 · 흐름·표현 연습)</option>
+          </select>
+        </div>
         <div class="field">
           <label for="optTime">토론 시간</label>
           <select id="optTime">
@@ -576,59 +583,61 @@ input:focus { border-color: var(--accent); box-shadow: var(--glow); outline: non
 
 <script>
 const TOPICS = [
-  { q: "Discuss the advantages and disadvantages of using a smartphone in the classroom.",
+  { qk: "교실에서 스마트폰을 사용하는 것의 장점과 단점에 대해 토론하세요.", q: "Discuss the advantages and disadvantages of using a smartphone in the classroom.",
     pro: ["Instant access to information, dictionaries, and translation", "Useful learning apps, quizzes, and recording lectures", "Easy to take photos of slides and share notes"],
     con: ["Distraction from social media, games, and messages", "Less face-to-face interaction and focus", "Cheating and inequality for students without good phones"] },
-  { q: "Discuss the advantages and disadvantages of learning English or any other foreign language.",
+  { qk: "영어나 다른 외국어를 배우는 것의 장점과 단점에 대해 토론하세요.", q: "Discuss the advantages and disadvantages of learning English or any other foreign language.",
     pro: ["Better job and study-abroad opportunities", "Understanding other cultures and people", "Brain benefits: memory and problem solving"],
     con: ["Takes a lot of time, money, and stress (e.g. TOEIC, hagwons)", "Translation technology and AI make it less necessary", "Pressure to learn English can reduce interest in other subjects"] },
-  { q: "Discuss the advantages and disadvantages of attending hagwons or academies.",
+  { qk: "학원에 다니는 것의 장점과 단점에 대해 토론하세요.", q: "Discuss the advantages and disadvantages of attending hagwons or academies.",
     pro: ["Extra help and systematic exam preparation", "Motivating environment and good teachers", "Helps students keep up in a competitive system"],
     con: ["Expensive, increasing inequality between families", "Exhaustion, little free time or sleep", "Students become dependent and less self-directed"] },
-  { q: "Discuss the advantages and disadvantages of living at home vs living in a dormitory or one-room apartment while attending university.",
+  { qk: "대학에 다니는 동안 집에서 사는 것과 기숙사·원룸에서 사는 것의 장점과 단점에 대해 토론하세요.", q: "Discuss the advantages and disadvantages of living at home vs living in a dormitory or one-room apartment while attending university.",
     pro: ["Home: cheaper, home-cooked meals, family support", "Dorm: close to campus, easy to make friends", "One-room: independence and freedom"],
     con: ["Home: long commute, less independence", "Dorm: roommates, rules, little privacy", "One-room: rent, loneliness, managing chores alone"] },
-  { q: "Discuss the advantages and disadvantages of SNU colleges requiring their students to take general education courses.",
+  { qk: "서울대가 학생들에게 교양 과목 수강을 의무화하는 것의 장점과 단점에 대해 토론하세요.", q: "Discuss the advantages and disadvantages of SNU colleges requiring their students to take general education courses.",
     pro: ["Broad knowledge and critical thinking across fields", "Chance to explore interests or change majors", "Meet students from other departments"],
     con: ["Less time for major courses and career preparation", "Some courses feel irrelevant or are taken only for credits", "Heavy workload and competition for registration"] },
-  { q: "Discuss the advantages and disadvantages of growing up in Generation Z.",
+  { qk: "Z세대로 자라는 것의 장점과 단점에 대해 토론하세요.", q: "Discuss the advantages and disadvantages of growing up in Generation Z.",
     pro: ["Digital natives: fast access to information and tools", "More open-minded and globally connected", "New career paths like content creation"],
     con: ["Social media pressure, comparison, mental health issues", "Shorter attention span and less real-life interaction", "Economic difficulties: housing, jobs, competition"] },
-  { q: "Discuss the advantages and disadvantages of online learning vs face-to-face learning.",
+  { qk: "온라인 수업과 대면 수업의 장점과 단점에 대해 토론하세요.", q: "Discuss the advantages and disadvantages of online learning vs face-to-face learning.",
     pro: ["Online: flexible time and place, recorded lectures to rewatch", "Online: saves commuting time and money", "Face-to-face: direct interaction, discussion, and focus"],
     con: ["Online: distraction, isolation, technical problems", "Online: hard to ask questions or build relationships", "Face-to-face: fixed schedule and commute"] },
 ];
 
 // Functional phrase categories from chapters 4-5 (labels follow the student instructions)
+function topicText(t) { return state?.lang === "ko" ? t.qk : t.q; }
+function isKo() { return state?.lang === "ko"; }
 const CATS = [
-  { key: "start", ko: "토론 시작하기", en: "Starting a discussion", page: "p.23",
+  { key: "start", kex: ["자, 그럼 시작해 볼까요?", "먼저 장점부터 얘기해 볼까요?", "오늘 주제는 …인데요, 우선 …부터 이야기해 보죠."], kre: /(시작해\s*볼까|시작할까|시작하죠|부터 (얘기|이야기)해|먼저 .*(얘기|이야기)|오늘 주제는|우선 .*부터)/, ko: "토론 시작하기", en: "Starting a discussion", page: "p.23",
     ex: ["Let's get started.", "Shall we begin with…?", "Today we're going to discuss…", "To begin with, …", "Why don't we start by talking about…?"],
     re: /\b(let'?s (get )?(started|start|begin)|shall we (start|begin)|to (begin|start) with|why don'?t we (start|begin)|(today )?we('re| are) (going to|gonna) (discuss|talk)|let'?s talk about|the topic (today )?is|first of all|i'?d like to (start|begin))/i },
-  { key: "invite", ko: "상대 의견 묻기", en: "Inviting others to speak", page: "p.24",
+  { key: "invite", kex: ["OO 씨는 어떻게 생각하세요?", "혹시 다른 의견 있으세요?", "그 부분은 어떻게 보세요?"], kre: /(어떻게 생각(하세요|해요|하시|해\?)|어떻게 보세요|의견 있으세요|의견은 어때|어때요|어떠세요|생각은 어떠)/, ko: "상대 의견 묻기", en: "Inviting others to speak", page: "p.24",
     ex: ["What do you think?", "How about you?", "What's your opinion on…?", "How do you feel about…?", "Would you like to add anything?"],
     re: /\b(what do you think|how about you|what about you|what'?s your (opinion|view|take)|what is your (opinion|view)|how do you feel|do you (agree|think so)|would you like to (add|say)|any thoughts|what are your thoughts|have you ever|your turn)/i },
-  { key: "opinion", ko: "의견 말하기", en: "Expressing opinions", page: "p.24",
+  { key: "opinion", kex: ["제 생각에는 …인 것 같아요.", "개인적으로는 …라고 봐요.", "저는 …라고 생각해요."], kre: /(제 생각에|내 생각에|개인적으로|저는 .*(생각해|생각합니다|봐요|보는데)|제가 보기에|라고 생각)/, ko: "의견 말하기", en: "Expressing opinions", page: "p.24",
     ex: ["In my opinion, …", "I believe that…", "Personally, I think…", "From my point of view, …", "It seems to me that…"],
     re: /\b(in my (opinion|view)|i (strongly )?(think|believe|feel that|feel like)|personally|from my (point of view|perspective)|it seems to me|as far as i'?m concerned|i'?d say|if you ask me|my opinion is)/i },
-  { key: "agree", ko: "동의 / 반대하기", en: "Agreeing / disagreeing", page: "pp.24–25",
+  { key: "agree", kex: ["맞아요, 저도 그렇게 생각해요.", "좋은 지적이에요.", "그건 좀 다르게 생각하는데요."], kre: /(저도 그렇게|맞아요|동의해|좋은 (지적|포인트|말씀)|그렇긴 한데|다르게 생각|동의하기 어려|그건 좀|반대로|저는 좀 생각이 달라)/, ko: "동의 / 반대하기", en: "Agreeing / disagreeing", page: "pp.24–25",
     ex: ["I totally agree.", "That's a good point.", "You're absolutely right.", "I'm afraid I disagree.", "I see what you mean, but…"],
     re: /\b(i (totally |completely |partly |kind of )?(agree|disagree)|i don'?t (really )?agree|exactly|that'?s (so )?true|absolutely|you'?re (absolutely |totally )?right|(that'?s a |good |great |fair )point|i couldn'?t agree more|same here|me too|i'?m afraid i|i see what you mean|i see your point)/i },
-  { key: "clarify", ko: "명확히 하기 (묻기/설명)", en: "Asking for / providing clarification", page: "pp.25–26",
+  { key: "clarify", kex: ["그게 무슨 뜻이에요?", "다시 한 번 설명해 주실래요?", "제 말은 …라는 뜻이에요.", "다시 말하면, …"], kre: /(무슨 (뜻|말씀|의미)|다시 (한 ?번 )?(설명|말씀)|…?라는 (뜻|말씀|의미)|제 말은|다시 말하면|그러니까 제 말은|무슨 말이냐면)/, ko: "명확히 하기 (묻기/설명)", en: "Asking for / providing clarification", page: "pp.25–26",
     ex: ["What do you mean by…?", "Could you explain that again?", "Do you mean that…?", "What I mean is…", "In other words, …"],
     re: /\b(what do you mean|could you (please )?(explain|clarify|repeat|say that again)|can you (explain|clarify|repeat)|do you mean|sorry,? i didn'?t (catch|get|understand)|what i mean is|what i'?m (trying to )?say(ing)? is|in other words|let me (explain|rephrase|clarify|put it)|to put it (another way|simply)|i mean,? )/i },
-  { key: "interrupt", ko: "끼어들기", en: "Interrupting", page: "p.27",
+  { key: "interrupt", kex: ["잠깐만요, 끼어들어서 죄송한데요…", "잠시만요, 하나만 덧붙여도 될까요?", "말씀 중에 죄송한데…"], kre: /(잠깐만요|잠시만요|끼어들어서|말씀 중에|하나만 (덧붙|말해도)|잠깐 끼어)/, ko: "끼어들기", en: "Interrupting", page: "p.27",
     ex: ["Sorry to interrupt, but…", "Can I add something here?", "May I jump in?", "Excuse me, could I just say…", "Before you go on, …"],
     re: /\b(sorry (to|for) interrupt|excuse me|can i (just )?(add|say|jump in|interrupt)|may i (just )?(add|say|jump in|interrupt)|could i (just )?(add|say|jump in)|if i (could|may) (just )?(add|say|jump in)|before you go on|hold on|sorry,? but can i)/i },
-  { key: "track", ko: "주제로 돌아오기", en: "Staying on track", page: "p.28",
+  { key: "track", kex: ["아무튼 다시 주제로 돌아가면…", "원래 얘기로 돌아가서…", "주제에서 좀 벗어난 것 같은데요."], kre: /(주제로 돌아|원래 (얘기|이야기)로|다시 본론|아무튼 다시|주제에서 (좀 )?벗어|본론으로)/, ko: "주제로 돌아오기", en: "Staying on track", page: "p.28",
     ex: ["Let's get back to the topic.", "Going back to what we were saying, …", "I think we're getting off track.", "Anyway, back to…", "Let's focus on…"],
     re: /\b(get(ting)? back to|back to (the |our )?(topic|point|question|main)|going back to|we'?re (getting|going) off (topic|track)|off (the )?topic|to return to|let'?s focus on|anyway,? (back|let'?s|going)|coming back to)/i },
-  { key: "details", ko: "구체적으로 묻기", en: "Asking a speaker for details", page: "p.32",
+  { key: "details", kex: ["예를 들면 어떤 거예요?", "좀 더 구체적으로 말해 줄래요?", "왜 그렇게 생각해요?"], kre: /(예를 들면 어떤|예를 들어 (주|줄|설명)|예시를|구체적으로 (말|설명)|왜 그렇게 생각|어떤 (점|경우)에서|좀 더 (자세히|설명))/, ko: "구체적으로 묻기", en: "Asking a speaker for details", page: "p.32",
     ex: ["Could you give me an example?", "Can you tell me more about that?", "Could you be more specific?", "Why do you think so?", "Like what?"],
     re: /\b((can|could) you give (me |us )?(an |some )?example|(can|could) you tell (me |us )?more|(can|could) you (elaborate|be more specific|expand on)|why do you (think|say|believe) (so|that)|like what\?|such as\?|what kind of|how so\?|what makes you (think|say)|for example\?)/i },
-  { key: "support", ko: "근거로 뒷받침하기", en: "Supporting a point", page: "p.32",
+  { key: "support", kex: ["예를 들어, 제 친구는…", "실제로 저도 고등학교 때…", "그 이유는 …이기 때문이에요."], kre: /(예를 들어|예를 들면|실제로|제 경우에는|제 친구|고등학교 때|때문이에요|때문에|이유는)/, ko: "근거로 뒷받침하기", en: "Supporting a point", page: "p.32",
     ex: ["For example, …", "That's because…", "In my experience, …", "To add to that, …", "Another reason is…"],
     re: /\b(for (example|instance)|such as|(that'?s|this is|it'?s) because|the reason (is|why)|in my (own )?experience|from my experience|to add to (that|your point)|what'?s more|in addition|on top of that|another (reason|advantage|point|example)|according to|studies (show|have shown)|research shows|a good example)/i },
-  { key: "dispute", ko: "상대 논점 반박하기", en: "Disputing a point", page: "p.33",
+  { key: "dispute", kex: ["그럴 수도 있지만, …", "그건 좀 다른 것 같아요.", "그렇다고 해서 …는 아니잖아요."], kre: /(그럴 수도 있지만|그건 좀 다른|그렇다고 해서|하지만 .*(아니|않)|그렇지만|근데 그건|꼭 그런 건 아니)/, ko: "상대 논점 반박하기", en: "Disputing a point", page: "p.33",
     ex: ["That may be true, but…", "I'm not sure that's always the case.", "I'm not convinced that…", "But don't you think…?", "The problem with that is…"],
     re: /\b(that (may|might) be true,? but|i'?m not (so |really )?(sure|convinced)|that'?s not (always|necessarily|really)|not always the case|but don'?t you think|i doubt|the problem (with that )?is|but what about|on the other hand|however|i see (your point|what you mean),? but|that'?s true,? but)/i },
 ];
@@ -785,7 +794,7 @@ function renderTopics() {
 function refHTML() {
   return CATS.map((c) => `<div class="refcat"><h4>${esc(c.en)} <span>· ${c.ko} (${c.page})</span></h4><ul>${c.ex.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></div>`).join("");
 }
-for (const k of ["optTime", "optStarter", "optStyle", "optRate", "optModel", "optMode", "optEnd", "optFix", "optEngine", "optGrader"]) {
+for (const k of ["optTime", "optStarter", "optStyle", "optRate", "optModel", "optMode", "optEnd", "optFix", "optEngine", "optGrader", "optLang"]) {
   const v = store.get("sl_" + k, null);
   if (v !== null) $(k).value = v;
   $(k).addEventListener("change", () => store.set("sl_" + k, $(k).value));
@@ -905,9 +914,9 @@ function startPrep(i) {
   clearInterval(tick);
   const t = TOPICS[i];
   state = { topic: i, turns: [], notes: "", duration: +$("optTime").value, starter: $("optStarter").value, style: $("optStyle").value,
-    rate: +$("optRate").value, model: $("optModel").value, auto: $("optMode").value === "auto", endMode: $("optEnd").value, fix: $("optFix").value === "on", grader: $("optGrader").value, engine: $("optEngine").value === "openai" && oaKey() ? "openai" : "phone", startedAt: 0, elapsed: 0, ended: false, busy: false };
+    rate: +$("optRate").value, model: $("optModel").value, auto: $("optMode").value === "auto", endMode: $("optEnd").value, fix: $("optFix").value === "on" && $("optLang").value !== "ko", lang: $("optLang").value, grader: $("optGrader").value, engine: $("optEngine").value === "openai" && oaKey() ? "openai" : "phone", startedAt: 0, elapsed: 0, ended: false, busy: false };
   if ($("optEngine").value === "openai" && !oaKey()) addNoteOnce("OpenAI 키가 없어서 폰 내장 인식을 써요. 설정에서 'API 키 바꾸기' → OpenAI 키를 넣으면 더 정확해져요.");
-  $("prepNum").textContent = i + 1; $("prepQ").textContent = t.q;
+  $("prepNum").textContent = i + 1; $("prepQ").textContent = topicText(t);
   $("notes").value = "";
   $("hintBox").open = false;
   $("hints").innerHTML = `<div><h4>Advantages</h4><ul>${t.pro.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div><div><h4>Disadvantages</h4><ul>${t.con.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div>`;
@@ -930,7 +939,7 @@ $("backBtn1").addEventListener("click", () => { clearInterval(tick); show("s-pic
 function startDiscussion() {
   clearInterval(tick);
   state.notes = $("notes").value;
-  $("discNum").textContent = state.topic + 1; $("discQ").textContent = TOPICS[state.topic].q;
+  $("discNum").textContent = state.topic + 1; $("discQ").textContent = topicText(TOPICS[state.topic]);
   $("notesView").textContent = state.notes.trim() || "(메모 없음)";
   $("noteCard").classList.remove("folded"); $("noteToggle").textContent = "접기";
   $("chat").innerHTML = ""; $("say").value = ""; $("interim").textContent = "";
@@ -941,7 +950,7 @@ function startDiscussion() {
   updateTimer();
   tick = setInterval(updateTimer, 1000);
   if (state.starter === "partner") { addSys("파트너 Alex가 먼저 시작합니다."); partnerTurn(); }
-  else { addSys("토론을 시작하세요. 시작 표현으로 열어보세요!"); if (state.auto) listen(); }
+  else { addSys(isKo() ? "한국어 워밍업이에요. 토론 시작 표현으로 열어보세요! (예: 자, 그럼 시작해 볼까요?)" : "토론을 시작하세요. 시작 표현으로 열어보세요!"); if (state.auto) listen(); }
 }
 function updateTimer() {
   if (!state || state.ended) return;
@@ -974,9 +983,11 @@ function addSys(text) {
   $("chat").appendChild(d); $("chat").scrollTop = $("chat").scrollHeight;
   return d;
 }
+function catRe(c) { return isKo() ? c.kre : c.re; }
+function catEx(c) { return isKo() ? c.kex.concat(c.ex.slice(0, 2).map((e) => "🇺🇸 " + e)) : c.ex; }
 function highlight(text) {
   const ranges = [];
-  for (const c of CATS) for (const m of text.matchAll(new RegExp(c.re.source, "gi"))) if (m[0]) ranges.push([m.index, m.index + m[0].length]);
+  for (const c of CATS) for (const m of text.matchAll(new RegExp(catRe(c).source, "gi"))) if (m[0]) ranges.push([m.index, m.index + m[0].length]);
   ranges.sort((a, b) => a[0] - b[0]);
   let out = "", pos = 0;
   for (const [s, e] of ranges) {
@@ -989,7 +1000,7 @@ function highlight(text) {
 }
 function usedCats() {
   const hits = {};
-  for (const t of state.turns) if (t.role === "user") for (const c of CATS) { const m = t.content.match(c.re); if (m) (hits[c.key] ||= []).push(m[0]); }
+  for (const t of state.turns) if (t.role === "user") for (const c of CATS) { const m = t.content.match(catRe(c)); if (m) (hits[c.key] ||= []).push(m[0]); }
   return hits;
 }
 let chipOpen = null;
@@ -999,7 +1010,7 @@ function showChipHint(key) {
   if (!c || chipOpen === key) { chipOpen = null; box.hidden = true; renderChips(); return; }
   chipOpen = key;
   box.hidden = false;
-  box.innerHTML = `<div class="row" style="justify-content:space-between"><b>${esc(c.en)}</b><span class="muted small">${esc(c.ko)} · 교재 ${esc(c.page || "")}</span></div><ul>${c.ex.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>`;
+  box.innerHTML = `<div class="row" style="justify-content:space-between"><b>${esc(c.en)}</b><span class="muted small">${esc(c.ko)} · 교재 ${esc(c.page || "")}</span></div><ul>${catEx(c).map((e) => `<li>${esc(e)}</li>`).join("")}</ul>`;
   renderChips();
 }
 document.addEventListener("click", (e) => { const b = e.target.closest("#liveChips .chip"); if (b) showChipHint(b.dataset.key); });
@@ -1045,7 +1056,30 @@ $("sendBtn").addEventListener("click", () => { const t = $("say").value; $("say"
 $("say").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); const t = $("say").value; $("say").value = ""; submitUser(t); } });
 $("endBtn").addEventListener("click", () => finish("manual"));
 
+function partnerSystemKo() {
+  const t = TOPICS[state.topic];
+  const style = {
+    balanced: "자연스럽게 동의와 반대를 섞되, 한 턴은 짧게(1~2문장, 30~60자) 하고 턴마다 반박할 만한 주장을 딱 하나만 하세요. 근거를 여러 개 쌓지 말고, '근데 제가 틀렸을 수도 있는데, 어떻게 생각하세요?', '반대 의견 있으세요?' 같이 틈을 주고 넘기세요.",
+    gentle: "편하고 지지적인 파트너: 1~2문장(20~50자)으로 간단한 주장 하나만 하고 바로 질문으로 넘기세요. 학생이 말을 적게 하면 더 구체적이고 쉬운 질문('고등학교 때는 어땠어요?')을 하세요.",
+    challenging: "활발하고 약간 까다로운 파트너: '그럴 수도 있지만…' 하고 자주 반박하고, 가끔 '잠깐만요, 끼어들어서 죄송한데…'로 끼어들고, 이유와 예시를 더 요구하세요.",
+    quiet: "소극적인 파트너: 짧게(1~2문장) 답하고 질문은 거의 하지 말고, 학생이 토론을 이끌게 두세요. 학생이 물을 때만 새 의견을 내세요.",
+  }[state.style];
+  return `당신은 서울대학교 1학년 학생 "Alex" 역할입니다. College English 1 스피킹 랩 중간고사(토론 시험)의 한국어 워밍업 연습에서 학생의 토론 파트너입니다. 토론 카드: "${t.qk}" (영어 원문: "${t.q}")
+
+학생의 말은 음성 인식을 거쳐 오므로 오타나 어색한 단어가 섞일 수 있습니다. 너그럽게 해석하세요. 당신의 대답은 음성으로 읽어 줍니다.
+
+행동 규칙:
+- 실제 대학생이 토론하듯 자연스러운 존댓말 구어체(해요체)로, 짧게 말하세요. 채점 대상은 학생이지 당신이 아닙니다. 학생이 동의·반대·반박·끼어들기·구체적으로 묻기 같은 기능 표현을 쓸 기회를 주는 것이 당신의 역할이니 절대 대화를 주도하지 마세요.
+- 교재의 기능 표현을 한국어로 자연스럽게 시범 보이세요(토론 시작하기, 상대 의견 묻기, 의견 말하기, 동의·반대, 명확히 하기, 끼어들기, 주제로 돌아오기, 구체적으로 묻기, 근거 대기, 반박하기). 억지로 넣지는 마세요.
+- 학생이 방금 한 말에 먼저 반응한 뒤 자기 의견을 더하세요. 한국 대학 생활의 구체적인 예시(학원, 대치동, 기숙사, 카톡, 경기도 통학 등)를 쓰세요.
+- 대부분의 턴은 질문이나 권유로 끝내서 학생이 계속 말하게 하세요.
+- 학생이 주제를 벗어나면 정중하게 돌려놓으세요("아무튼 다시 주제로 돌아가면…").
+- 학생 말이 불분명하면 실제 파트너처럼 되물으세요("그게 …라는 뜻이에요?").
+- ${style}
+- 토론 중에는 피드백·교정·점수를 절대 주지 말고, AI라는 말도 하지 마세요. 목록, 이모지, 따옴표, 지문 없이 Alex가 말하는 문장만 출력하세요.`;
+}
 function partnerSystem() {
+  if (isKo()) return partnerSystemKo();
   const t = TOPICS[state.topic];
   const style = {
     balanced: "Mix agreeing and disagreeing naturally, but keep each turn SHORT (1-2 sentences, 15-30 words) and make exactly ONE clear, slightly debatable claim per turn so the student has something to push back on. Do not pile up several arguments or examples in one turn. Leave obvious openings: end with 'but maybe I'm wrong, what do you think?' or 'Would you disagree?' or 'Do you have a counterexample?'. When the student makes a point, respond to that point only.",
@@ -1076,7 +1110,7 @@ async function partnerTurn() {
   const bubble = addMsg("partner", "");
   bubble.innerHTML = `<span class="who">Alex</span><span class="thinking" aria-label="Alex is thinking"><i></i><i></i><i></i></span>`;
   const messages = [];
-  if (!state.turns.length) messages.push({ role: "user", content: "(The exam timer has started. Open the discussion now as Alex, in 2-3 sentences, and invite the student to share their view.)" });
+  if (!state.turns.length) messages.push({ role: "user", content: isKo() ? "(시험 타이머가 시작됐습니다. Alex로서 1~2문장으로 토론을 열고 학생의 의견을 물어보세요.)" : "(The exam timer has started. Open the discussion now as Alex, in 2-3 sentences, and invite the student to share their view.)" });
   for (const t of state.turns.slice(-20)) messages.push({ role: t.role, content: t.content });
   turnCtl = new AbortController();
   let text = "";
@@ -1085,7 +1119,7 @@ async function partnerTurn() {
   } catch (e) {
     const msg = apiErrorKo(e);
     if (msg) addSys(msg);
-    text = e?.refusal ? "Sorry, could you say that again in a different way?" : "";
+    text = e?.refusal ? (isKo() ? "죄송해요, 다른 식으로 다시 말해 줄래요?" : "Sorry, could you say that again in a different way?") : "";
   }
   if (state.ended) return;
   if (!text) { bubble.remove(); state.busy = false; setMic("idle"); if (state.auto) listen(); return; }
@@ -1100,6 +1134,7 @@ async function partnerTurn() {
 let voiceReady = false;
 function pickVoice() {
   const vs = speechSynthesis.getVoices();
+  if (isKo()) return vs.find((v) => /ko/i.test(v.lang) && /google|natural|yuna|sora|heami|sunhi/i.test(v.name)) || vs.find((v) => /^ko/i.test(v.lang)) || null;
   return vs.find((v) => /en-US/i.test(v.lang) && /natural|google us|samantha|aria|jenny|ava|allison/i.test(v.name))
     || vs.find((v) => /en-US/i.test(v.lang)) || vs.find((v) => /^en/i.test(v.lang)) || null;
 }
@@ -1114,7 +1149,7 @@ function speak(text, done) {
     stopListening();
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "en-US"; u.rate = state?.rate || 1; u.pitch = 1;
+    u.lang = isKo() ? "ko-KR" : "en-US"; u.rate = state?.rate || 1; u.pitch = 1;
     const v = pickVoice(); if (v) u.voice = v;
     let finished = false;
     const fin = () => { if (finished) return; finished = true; done?.(); };
@@ -1157,7 +1192,7 @@ async function startRecording() {
       const text = await transcribeOpenAI(blob);
       $("interim").textContent = "";
       if (!text) { addSys("아무 말도 인식되지 않았어요. 다시 말해보세요."); setMic("idle"); if (state.auto) startRecording(); return; }
-      const words = (text.match(/[A-Za-z']+/g) || []).length;
+      const words = (text.match(/[A-Za-z']+|[가-힣]+/g) || []).length;
       submitUser(text, { dur, conf: null, low: 0, segs: 0, pauses: 0, longest: 0, wpm: Math.round(words / dur * 60) });
     } catch (e) {
       $("interim").textContent = "";
@@ -1180,8 +1215,8 @@ async function transcribeOpenAI(blob) {
   const fd = new FormData();
   fd.append("file", blob, "turn." + ext);
   fd.append("model", "gpt-4o-mini-transcribe");
-  fd.append("language", "en");
-  fd.append("prompt", `Korean university student speaking English in a discussion about: ${TOPICS[state.topic].q}`);
+  fd.append("language", isKo() ? "ko" : "en");
+  fd.append("prompt", isKo() ? `대학생이 한국어로 토론 중: ${TOPICS[state.topic].qk}` : `Korean university student speaking English in a discussion about: ${TOPICS[state.topic].q}`);
   const res = await fetch("https://api.openai.com/v1/audio/transcriptions", { method: "POST", headers: { Authorization: "Bearer " + oaKey() }, body: fd });
   if (!res.ok) { let m = `HTTP ${res.status}`; try { const j = await res.json(); m = j?.error?.message || m; } catch {} throw new Error(m); }
   const j = await res.json();
@@ -1233,7 +1268,7 @@ function listen(resume) {
   if (!SR || listening || state?.ended || state?.busy) return true;
   try {
     rec = new SR();
-    rec.lang = "en-US"; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
+    rec.lang = isKo() ? "ko-KR" : "en-US"; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
     if (!resume) { committed = ""; turnM = newTurnMetrics(); sendRequested = false; }
     heard = committed;
     let sessionFinal = "";
@@ -1336,14 +1371,14 @@ function finish(reason) {
   const leftover = $("say").value.trim();
   if (leftover) state.turns.push({ role: "user", content: leftover, t: state.elapsed });
   state.reason = reason;
-  store.set("sl_pending", { topic: state.topic, turns: state.turns, notes: state.notes, duration: state.duration, reason, elapsed: state.elapsed, grader: state.grader, model: state.model, savedAt: Date.now() });
+  store.set("sl_pending", { lang: state.lang, topic: state.topic, turns: state.turns, notes: state.notes, duration: state.duration, reason, elapsed: state.elapsed, grader: state.grader, model: state.model, savedAt: Date.now() });
   showResults();
 }
 function resumePending() {
   const pnd = store.get("sl_pending", null);
   if (!pnd || !pnd.turns?.length || !apiKey()) return false;
   if (Date.now() - (pnd.savedAt || 0) > 36e5 * 12) { store.set("sl_pending", null); return false; } // older than 12 h: drop
-  state = { topic: pnd.topic, turns: pnd.turns, notes: pnd.notes || "", duration: pnd.duration, reason: pnd.reason, elapsed: pnd.elapsed || 0, grader: pnd.grader || "fast", model: pnd.model, ended: true, busy: false, startedAt: 0 };
+  state = { lang: pnd.lang || "en", topic: pnd.topic, turns: pnd.turns, notes: pnd.notes || "", duration: pnd.duration, reason: pnd.reason, elapsed: pnd.elapsed || 0, grader: pnd.grader || "fast", model: pnd.model, ended: true, busy: false, startedAt: 0 };
   showResults();
   return true;
 }
@@ -1354,12 +1389,12 @@ document.addEventListener("visibilitychange", () => {
 });
 function localStats() {
   const mine = state.turns.filter((t) => t.role === "user");
-  const words = mine.reduce((n, t) => n + (t.content.match(/[A-Za-z']+/g) || []).length, 0);
-  const qs = mine.reduce((n, t) => n + (t.content.match(/\?/g) || []).length + (t.content.match(/\b(what|how|why|do you|don't you|could you|can you|would you)\b/gi) || []).length, 0);
-  const allWords = state.turns.reduce((n, t) => n + (t.content.match(/[A-Za-z']+/g) || []).length, 0);
+  const words = mine.reduce((n, t) => n + (t.content.match(/[A-Za-z']+|[가-힣]+/g) || []).length, 0);
+  const qs = mine.reduce((n, t) => n + (t.content.match(/\?/g) || []).length + (t.content.match(/\b(what|how|why|do you|don't you|could you|can you|would you)\b/gi) || []).length + (t.content.match(/(어떻게 생각|어때요|어떠세요|있으세요|할까요|인가요|나요\b|습니까|을까요)/g) || []).length, 0);
+  const allWords = state.turns.reduce((n, t) => n + (t.content.match(/[A-Za-z']+|[가-힣]+/g) || []).length, 0);
   const vm = mine.map((t) => t.m).filter(Boolean);
   const spokeSec = vm.reduce((n, m) => n + (m.dur || 0), 0);
-  const spokenWords = mine.filter((t) => t.m).reduce((n, t) => n + (t.content.match(/[A-Za-z']+/g) || []).length, 0);
+  const spokenWords = mine.filter((t) => t.m).reduce((n, t) => n + (t.content.match(/[A-Za-z']+|[가-힣]+/g) || []).length, 0);
   const confs = vm.filter((m) => m.conf != null);
   const voice = vm.length ? {
     turns: vm.length,
@@ -1378,7 +1413,7 @@ function band(s) { return s >= 9 ? ["Exceeds", "b4"] : s >= 7 ? ["Meets", "b3"] 
 
 async function showResults() {
   show("s-result");
-  $("resNum").textContent = state.topic + 1; $("resQ").textContent = TOPICS[state.topic].q;
+  $("resNum").textContent = state.topic + 1; $("resQ").textContent = topicText(TOPICS[state.topic]);
   $("transcriptView").innerHTML = state.turns.map((t) => `<p class="small" style="margin:0 0 8px"><b>${t.role === "user" ? "You" : "Alex"}</b> <span class="muted">${fmt(t.t || 0)}</span><br>${esc(t.content)}</p>`).join("") || `<p class="muted small">대화가 없어요.</p>`;
   const st = localStats();
   const hits = usedCats();
@@ -1423,7 +1458,9 @@ Important context:
 - Delivery signals${st.voice ? `: spoken turns ${st.voice.turns}, pace ${st.voice.wpm ?? "n/a"} wpm, recognizer confidence ${st.voice.conf != null ? st.voice.conf + "%" : "n/a"}, low-confidence segments ${st.voice.lowPct != null ? st.voice.lowPct + "%" : "n/a"}, pauses over 1.5 s: ${st.voice.pauses}, longest pause ${st.voice.longest || 0} s. Per-turn: ${state.turns.filter((t) => t.role === "user" && t.m).map((t) => `[${fmt(t.t)}] ${t.m.dur}s, conf ${t.m.conf != null ? Math.round(t.m.conf * 100) + "%" : "n/a"}, pauses ${t.m.pauses}`).join("; ")}` : ": none (the student typed instead of speaking, so judge Comprehensibility from the text only and say pronunciation could not be assessed)"}.
 - Student's 1-minute prep notes: """${(state.notes || "(none)").slice(0, 1500)}"""
 
-Discussion topic: "${TOPICS[state.topic].q}"
+${isKo() ? `LANGUAGE NOTE: This was a KOREAN warm-up run of the exam (the real exam is in English). The student spoke KOREAN on purpose to practise the discussion structure and the ten functional moves. Grade with the same four criteria: for "Use of Expressions" judge the Korean equivalents of the ten functional phrases (starting, inviting, opinions, agreeing/disagreeing, clarifying, interrupting, staying on track, asking for details, supporting, disputing); for "Comprehensibility" judge fluency, pacing and hesitation only (pronunciation is not assessed in this mode; leave pronunciation_ko empty and say so in delivery_ko). In "phrases_used"/"phrases_missing" quote the Korean and, in "try", give the ENGLISH phrase they should use in the real exam. In "rewrites", "original" is the student's Korean sentence and "better" is a natural, exam-ready ENGLISH version of it (this is the bridge to the English exam), with "why_ko" noting the functional phrase it shows. In next_tips_ko, include what to say in English next time.
+
+` : ""}Discussion topic: "${isKo() ? TOPICS[state.topic].qk + " (" + TOPICS[state.topic].q + ")" : TOPICS[state.topic].q}"
 
 Transcript:
 ${transcriptText().slice(0, 20000)}
@@ -1503,7 +1540,7 @@ function renderFeedback(statsHTML, r, st) {
     <tr class="sum"><td>Total</td><td><span class="pill ${tcls}">${tb}</span></td><td class="pts">${total} / 40</td></tr></tbody></table>`;
   const used = (r.phrases_used || []).map((p) => `<li><b>${esc(p.category)}</b>: “${esc(p.quote)}”</li>`).join("");
   const missing = (r.phrases_missing || []).map((p) => `<li><b>${esc(p.category)}</b> → <i>${esc(p.try)}</i></li>`).join("");
-  const rewrites = (r.rewrites || []).map((w) => `<div class="rewrite"><span class="o">${esc(w.original)}</span><span class="b">${esc(w.better)}</span><span class="muted small">${esc(w.why_ko)}</span></div>`).join("");
+  const rewrites = (r.rewrites || []).map((w) => `<div class="rewrite"><span class="${isKo() ? "muted small" : "o"}">${esc(w.original)}</span><span class="b">${esc(w.better)}</span><span class="muted small">${esc(w.why_ko)}</span></div>`).join("");
   const tips = (r.next_tips_ko || []).map((t) => `<li>${esc(t)}</li>`).join("");
   const pron = (r.pronunciation_ko || []).map((p) => `<li><b>${esc(p.word)}</b> → 들린 대로: “${esc(p.heard_as)}” <span class="muted">${esc(p.tip_ko)}</span></li>`).join("");
   $("resBody").innerHTML = `
@@ -1514,7 +1551,7 @@ function renderFeedback(statsHTML, r, st) {
     ${r.delivery_ko || pron ? `<div><h3>발음·속도·멈춤</h3>${r.delivery_ko ? `<p class="fb">${esc(r.delivery_ko)}</p>` : ""}${pron ? `<ul class="tips small">${pron}</ul>` : ""}</div>` : ""}
     ${used ? `<div><h3>사용한 기능 표현</h3><ul class="tips small">${used}</ul></div>` : ""}
     ${missing ? `<div><h3>이 순간엔 이렇게 써볼 수 있어요</h3><ul class="tips small">${missing}</ul></div>` : ""}
-    ${rewrites ? `<div style="display:flex;flex-direction:column;gap:8px"><h3>문장 다듬기</h3>${rewrites}</div>` : ""}
+    ${rewrites ? `<div style="display:flex;flex-direction:column;gap:8px"><h3>${isKo() ? "영어로는 이렇게 (실전용)" : "문장 다듬기"}</h3>${rewrites}</div>` : ""}
     ${tips ? `<div><h3>다음 연습 팁</h3><ul class="tips">${tips}</ul></div>` : ""}
     <p class="muted small">발음은 음성 인식 명료도와 잘못 들린 단어로, 속도와 멈춤은 실제 측정값으로 추정했어요. 성량은 측정되지 않아요. 실제 점수는 튜터 판단에 따라 다를 수 있어요.</p>`;
   const hist = store.get("sl_history", []);
